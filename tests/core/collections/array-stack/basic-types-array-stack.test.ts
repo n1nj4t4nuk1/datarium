@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
-import { Stack } from "../../../../src/core/collections/stack/stack";
+import { ArrayStack } from "../../../../src/core/collections/array-stack/array-stack";
 import { EmptyStackError } from "../../../../src/core/errors/empty-stack-error";
 
-describe("Stack", () => {
+describe("ArrayStack", () => {
   test("creates an empty stack by default", () => {
-    const stack = new Stack<number>();
+    const stack = new ArrayStack<number>();
 
     expect(stack.size()).toBe(0);
     expect(stack.isEmpty()).toBe(true);
@@ -12,7 +12,7 @@ describe("Stack", () => {
   });
 
   test("creates a stack from initial elements", () => {
-    const stack = new Stack<number>([1, 2, 3]);
+    const stack = new ArrayStack<number>([1, 2, 3]);
 
     expect(stack.size()).toBe(3);
     expect(stack.peek()).toBe(3);
@@ -20,7 +20,7 @@ describe("Stack", () => {
   });
 
   test("push adds element at the top", () => {
-    const stack = new Stack<number>();
+    const stack = new ArrayStack<number>();
 
     expect(stack.push(10)).toBe(true);
     expect(stack.push(20)).toBe(true);
@@ -29,7 +29,7 @@ describe("Stack", () => {
   });
 
   test("pop removes and returns top element in LIFO order", () => {
-    const stack = new Stack<number>([1, 2, 3]);
+    const stack = new ArrayStack<number>([1, 2, 3]);
 
     expect(stack.pop()).toBe(3);
     expect(stack.pop()).toBe(2);
@@ -38,7 +38,7 @@ describe("Stack", () => {
   });
 
   test("peek returns top element without removing it", () => {
-    const stack = new Stack<number>([5, 10]);
+    const stack = new ArrayStack<number>([5, 10]);
 
     expect(stack.peek()).toBe(10);
     expect(stack.size()).toBe(2);
@@ -46,19 +46,19 @@ describe("Stack", () => {
   });
 
   test("throws EmptyStackError when pop is called on empty stack", () => {
-    const stack = new Stack<number>();
+    const stack = new ArrayStack<number>();
 
     expect(() => stack.pop()).toThrow(EmptyStackError);
   });
 
   test("throws EmptyStackError when peek is called on empty stack", () => {
-    const stack = new Stack<number>();
+    const stack = new ArrayStack<number>();
 
     expect(() => stack.peek()).toThrow(EmptyStackError);
   });
 
   test("clear removes all elements", () => {
-    const stack = new Stack<number>([1, 2, 3]);
+    const stack = new ArrayStack<number>([1, 2, 3]);
 
     stack.clear();
 
@@ -68,7 +68,7 @@ describe("Stack", () => {
   });
 
   test("toArray returns a shallow copy", () => {
-    const stack = new Stack<number>([1, 2]);
+    const stack = new ArrayStack<number>([1, 2]);
     const snapshot = stack.toArray();
 
     snapshot.push(3);

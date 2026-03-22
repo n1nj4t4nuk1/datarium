@@ -1,7 +1,7 @@
 import { ArrayList } from "../array-list/array-list";
 import { EmptyStackError } from "../../errors/empty-stack-error";
 
-export class Stack<T> {
+export class ArrayStack<T> {
   private readonly items: ArrayList<T>;
 
   constructor(initialElements: T[] = []) {
