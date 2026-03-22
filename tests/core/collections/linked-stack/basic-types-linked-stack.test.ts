@@ -22,8 +22,8 @@ describe("LinkedStack", () => {
   test("push adds element at the top", () => {
     const stack = new LinkedStack<number>();
 
-    expect(stack.push(10)).toBe(true);
-    expect(stack.push(20)).toBe(true);
+    stack.push(10);
+    stack.push(20);
     expect(stack.peek()).toBe(20);
     expect(stack.toArray()).toEqual([10, 20]);
   });

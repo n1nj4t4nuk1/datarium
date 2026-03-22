@@ -22,8 +22,8 @@ describe("LinkedQueue", () => {
   test("enqueue adds element at the end", () => {
     const queue = new LinkedQueue<number>();
 
-    expect(queue.enqueue(10)).toBe(true);
-    expect(queue.enqueue(20)).toBe(true);
+    queue.enqueue(10);
+    queue.enqueue(20);
     expect(queue.peek()).toBe(10);
     expect(queue.toArray()).toEqual([10, 20]);
   });

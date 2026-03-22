@@ -16,8 +16,8 @@ export class LinkedStack<T> {
     return this.items.isEmpty();
   }
 
-  push(element: T): boolean {
-    return this.items.add(element);
+  push(element: T): void {
+    this.items.add(element);
   }
 
   pop(): T {

@@ -1,4 +1,5 @@
 import type { Map } from "../map";
+import { KeyNotFoundError } from "../../errors/key-not-found-error";
 
 export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
   private storage: { [key: string]: V; [key: symbol]: V } = {};
@@ -26,9 +27,9 @@ export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
     return false;
   }
 
-  get(key: K): V | undefined {
+  get(key: K): V {
     if (!this.containsKey(key)) {
-      return undefined;
+      throw new KeyNotFoundError(`Key '${String(key)}' not found in NativeMap`);
     }
 
     const storageKey = this.toStorageKey(key);
@@ -36,7 +37,7 @@ export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
   }
 
   put(key: K, value: V): V | undefined {
-    const previous = this.get(key);
+    const previous = this.containsKey(key) ? this.storage[this.toStorageKey(key)] : undefined;
 
     const storageKey = this.toStorageKey(key);
     this.storage[storageKey] = value;
@@ -44,9 +45,9 @@ export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
     return previous;
   }
 
-  remove(key: K): V | undefined {
+  remove(key: K): V {
     if (!this.containsKey(key)) {
-      return undefined;
+      throw new KeyNotFoundError(`Key '${String(key)}' not found in NativeMap`);
     }
 
     const storageKey = this.toStorageKey(key);

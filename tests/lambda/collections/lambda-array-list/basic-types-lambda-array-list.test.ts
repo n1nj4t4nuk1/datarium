@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { LambdaArrayList } from "../../../../src/lambda/collections/lambda-array-list/lambda-array-list";
+import { ElementNotFoundError } from "../../../../src/core/errors/element-not-found-error";
 import { IndexOutOfBoundsError } from "../../../../src/core/errors/index-out-of-bounds-error";
 
 describe("LambdaArrayList (unsorted)", () => {
@@ -47,8 +48,9 @@ describe("LambdaArrayList (unsorted)", () => {
 
     expect(list.contains("b")).toBe(true);
     expect(list.indexOf("c")).toBe(2);
-    expect(list.remove("b")).toBe(true);
+    list.remove("b");
     expect(list.toArray()).toEqual(["a", "c"]);
+    expect(() => list.indexOf("z")).toThrow(ElementNotFoundError);
   });
 
   test("throws IndexOutOfBoundsError for invalid indexes", () => {

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { NativeMap } from "../../../../src/core/collections/native-map/native-map";
+import { KeyNotFoundError } from "../../../../src/core/errors/key-not-found-error";
 
 describe("NativeMap", () => {
   test("creates an empty map by default", () => {
@@ -32,10 +33,10 @@ describe("NativeMap", () => {
     expect(map.get("one")).toBe(11);
   });
 
-  test("get returns undefined for missing keys", () => {
+  test("get throws KeyNotFoundError for missing keys", () => {
     const map = new NativeMap<string, number>();
 
-    expect(map.get("missing")).toBeUndefined();
+    expect(() => map.get("missing")).toThrow(KeyNotFoundError);
   });
 
   test("remove deletes key and returns previous value", () => {
@@ -45,7 +46,7 @@ describe("NativeMap", () => {
     map.put("two", 2);
 
     expect(map.remove("one")).toBe(1);
-    expect(map.remove("one")).toBeUndefined();
+    expect(() => map.remove("one")).toThrow(KeyNotFoundError);
     expect(map.size()).toBe(1);
     expect(map.containsKey("one")).toBe(false);
     expect(map.keys()).toEqual(["two"]);

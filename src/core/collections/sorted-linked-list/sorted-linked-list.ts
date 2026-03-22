@@ -10,10 +10,9 @@ export class SortedLinkedList<T> extends LinkedList<T> implements SortedList<T> 
     }
   }
 
-  override add(element: T): boolean {
+  override add(element: T): void {
     const insertionIndex = this.findInsertionIndex(element);
     super.addAt(insertionIndex, element);
-    return true;
   }
 
   override set(index: number, element: T): T {

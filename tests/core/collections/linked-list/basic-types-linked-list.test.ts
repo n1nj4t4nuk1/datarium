@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { LinkedList } from "../../../../src/core/collections/linked-list/linked-list";
+import { ElementNotFoundError } from "../../../../src/core/errors/element-not-found-error";
 import { IndexOutOfBoundsError } from "../../../../src/core/errors/index-out-of-bounds-error";
 
 describe("LinkedList", () => {
@@ -22,8 +23,8 @@ describe("LinkedList", () => {
   test("adds elements at the end", () => {
     const list = new LinkedList<number>();
 
-    expect(list.add(10)).toBe(true);
-    expect(list.add(20)).toBe(true);
+    list.add(10);
+    list.add(20);
     expect(list.toArray()).toEqual([10, 20]);
   });
 
@@ -47,7 +48,7 @@ describe("LinkedList", () => {
   test("removes by value and by index", () => {
     const list = new LinkedList<number>([1, 2, 3, 2]);
 
-    expect(list.remove(2)).toBe(true);
+    list.remove(2);
     expect(list.toArray()).toEqual([1, 3, 2]);
 
     const removed = list.removeAt(1);
@@ -62,7 +63,7 @@ describe("LinkedList", () => {
     expect(list.contains("b")).toBe(true);
     expect(list.contains("z")).toBe(false);
     expect(list.indexOf("c")).toBe(2);
-    expect(list.indexOf("z")).toBe(-1);
+    expect(() => list.indexOf("z")).toThrow(ElementNotFoundError);
   });
 
   test("clears all elements", () => {

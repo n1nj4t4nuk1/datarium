@@ -1,5 +1,6 @@
 import type { List } from "../list";
 import { IndexOutOfBoundsError } from "../../errors/index-out-of-bounds-error";
+import { ElementNotFoundError } from "../../errors/element-not-found-error";
 
 export class ArrayList<T> implements List<T> {
   private elements: T[];
@@ -17,7 +18,7 @@ export class ArrayList<T> implements List<T> {
   }
 
   contains(element: T): boolean {
-    return this.indexOf(element) !== -1;
+    return this.elements.includes(element);
   }
 
   get(index: number): T {
@@ -32,9 +33,8 @@ export class ArrayList<T> implements List<T> {
     return previous;
   }
 
-  add(element: T): boolean {
+  add(element: T): void {
     this.elements.push(element);
-    return true;
   }
 
   addAt(index: number, element: T): void {
@@ -42,14 +42,13 @@ export class ArrayList<T> implements List<T> {
     this.elements.splice(index, 0, element);
   }
 
-  remove(element: T): boolean {
-    const index = this.indexOf(element);
+  remove(element: T): void {
+    const index = this.elements.indexOf(element);
     if (index === -1) {
-      return false;
+      throw new ElementNotFoundError(`Element '${String(element)}' not found in ArrayList`);
     }
 
     this.removeAt(index);
-    return true;
   }
 
   removeAt(index: number): T {
@@ -59,7 +58,13 @@ export class ArrayList<T> implements List<T> {
   }
 
   indexOf(element: T): number {
-    return this.elements.indexOf(element);
+    const index = this.elements.indexOf(element);
+
+    if (index === -1) {
+      throw new ElementNotFoundError(`Element '${String(element)}' not found in ArrayList`);
+    }
+
+    return index;
   }
 
   clear(): void {

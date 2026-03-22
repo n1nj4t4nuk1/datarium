@@ -17,8 +17,8 @@ export class ArrayQueue<T> implements Queue<T> {
     return this.items.isEmpty();
   }
 
-  enqueue(element: T): boolean {
-    return this.items.add(element);
+  enqueue(element: T): void {
+    this.items.add(element);
   }
 
   dequeue(): T {

@@ -1,5 +1,6 @@
 import type { List } from "../list";
 import { IndexOutOfBoundsError } from "../../errors/index-out-of-bounds-error";
+import { ElementNotFoundError } from "../../errors/element-not-found-error";
 
 class LinkedListNode<T> {
   value: T;
@@ -33,7 +34,16 @@ export class LinkedList<T> implements List<T> {
   }
 
   contains(element: T): boolean {
-    return this.indexOf(element) !== -1;
+    let current = this.head;
+
+    while (current !== null) {
+      if (current.value === element) {
+        return true;
+      }
+      current = current.next;
+    }
+
+    return false;
   }
 
   get(index: number): T {
@@ -49,9 +59,8 @@ export class LinkedList<T> implements List<T> {
     return previous;
   }
 
-  add(element: T): boolean {
+  add(element: T): void {
     this.linkLast(element);
-    return true;
   }
 
   addAt(index: number, element: T): void {
@@ -64,17 +73,17 @@ export class LinkedList<T> implements List<T> {
     this.linkBefore(element, this.getNode(index));
   }
 
-  remove(element: T): boolean {
+  remove(element: T): void {
     let current = this.head;
     while (current !== null) {
       if (current.value === element) {
         this.unlink(current);
-        return true;
+        return;
       }
       current = current.next;
     }
 
-    return false;
+    throw new ElementNotFoundError(`Element '${String(element)}' not found in LinkedList`);
   }
 
   removeAt(index: number): T {
@@ -94,7 +103,7 @@ export class LinkedList<T> implements List<T> {
       index += 1;
     }
 
-    return -1;
+    throw new ElementNotFoundError(`Element '${String(element)}' not found in LinkedList`);
   }
 
   clear(): void {

@@ -2,6 +2,7 @@ import type { List } from "../list";
 import { IndexOutOfBoundsError } from "../../errors/index-out-of-bounds-error";
 import { InvalidCapacityError } from "../../errors/invalid-capacity-error";
 import { ListCapacityExceededError } from "../../errors/list-capacity-exceeded-error";
+import { ElementNotFoundError } from "../../errors/element-not-found-error";
 
 export class BoundedArrayList<T> implements List<T> {
   private readonly capacity: number;
@@ -27,7 +28,13 @@ export class BoundedArrayList<T> implements List<T> {
   }
 
   contains(element: T): boolean {
-    return this.indexOf(element) !== -1;
+    for (let index = 0; index < this.count; index += 1) {
+      if (this.elements[index] === element) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   get(index: number): T {
@@ -42,11 +49,10 @@ export class BoundedArrayList<T> implements List<T> {
     return previous;
   }
 
-  add(element: T): boolean {
+  add(element: T): void {
     this.ensureCapacity();
     this.elements[this.count] = element;
     this.count += 1;
-    return true;
   }
 
   addAt(index: number, element: T): void {
@@ -61,14 +67,13 @@ export class BoundedArrayList<T> implements List<T> {
     this.count += 1;
   }
 
-  remove(element: T): boolean {
-    const index = this.indexOf(element);
+  remove(element: T): void {
+    const index = this.findIndex(element);
     if (index === -1) {
-      return false;
+      throw new ElementNotFoundError(`Element '${String(element)}' not found in BoundedArrayList`);
     }
 
     this.removeAt(index);
-    return true;
   }
 
   removeAt(index: number): T {
@@ -87,13 +92,12 @@ export class BoundedArrayList<T> implements List<T> {
   }
 
   indexOf(element: T): number {
-    for (let index = 0; index < this.count; index += 1) {
-      if (this.elements[index] === element) {
-        return index;
-      }
+    const index = this.findIndex(element);
+    if (index === -1) {
+      throw new ElementNotFoundError(`Element '${String(element)}' not found in BoundedArrayList`);
     }
 
-    return -1;
+    return index;
   }
 
   clear(): void {
@@ -130,5 +134,15 @@ export class BoundedArrayList<T> implements List<T> {
     if (this.count >= this.capacity) {
       throw new ListCapacityExceededError(this.capacity);
     }
+  }
+
+  private findIndex(element: T): number {
+    for (let index = 0; index < this.count; index += 1) {
+      if (this.elements[index] === element) {
+        return index;
+      }
+    }
+
+    return -1;
   }
 }

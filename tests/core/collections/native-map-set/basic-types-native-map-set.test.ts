@@ -1,5 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { NativeMapSet } from "../../../../src/core/collections/native-map-set/native-map-set";
+import { DuplicateElementError } from "../../../../src/core/errors/duplicate-element-error";
+import { ElementNotFoundError } from "../../../../src/core/errors/element-not-found-error";
 
 describe("NativeMapSet", () => {
   test("creates an empty set by default", () => {
@@ -10,19 +12,16 @@ describe("NativeMapSet", () => {
     expect(set.toArray()).toEqual([]);
   });
 
-  test("creates a set from initial values without duplicates", () => {
-    const set = new NativeMapSet<string>(["b", "a", "b", "c", "a"]);
-
-    expect(set.size()).toBe(3);
-    expect(set.toArray()).toEqual(["b", "a", "c"]);
+  test("throws DuplicateElementError when initial values contain duplicates", () => {
+    expect(() => new NativeMapSet<string>(["b", "a", "b", "c", "a"])).toThrow(DuplicateElementError);
   });
 
-  test("add returns true for new values and false for duplicates", () => {
+  test("add inserts new values and throws for duplicates", () => {
     const set = new NativeMapSet<string>();
 
-    expect(set.add("one")).toBe(true);
-    expect(set.add("two")).toBe(true);
-    expect(set.add("one")).toBe(false);
+    set.add("one");
+    set.add("two");
+    expect(() => set.add("one")).toThrow(DuplicateElementError);
 
     expect(set.size()).toBe(2);
     expect(set.toArray()).toEqual(["one", "two"]);
@@ -35,11 +34,11 @@ describe("NativeMapSet", () => {
     expect(set.contains("z")).toBe(false);
   });
 
-  test("remove deletes existing value and returns false when absent", () => {
+  test("remove deletes existing value and throws when absent", () => {
     const set = new NativeMapSet<string>(["a", "b", "c"]);
 
-    expect(set.remove("b")).toBe(true);
-    expect(set.remove("b")).toBe(false);
+    set.remove("b");
+    expect(() => set.remove("b")).toThrow(ElementNotFoundError);
     expect(set.toArray()).toEqual(["a", "c"]);
   });
 
@@ -68,8 +67,8 @@ describe("NativeMapSet", () => {
     const second = Symbol("second");
     const set = new NativeMapSet<symbol>();
 
-    expect(set.add(first)).toBe(true);
-    expect(set.add(second)).toBe(true);
+    set.add(first);
+    set.add(second);
     expect(set.contains(first)).toBe(true);
     expect(set.contains(second)).toBe(true);
     expect(set.size()).toBe(2);

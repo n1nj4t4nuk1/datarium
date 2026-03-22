@@ -3,9 +3,9 @@ export interface Map<K, V> {
   isEmpty(): boolean;
   containsKey(key: K): boolean;
   containsValue(value: V): boolean;
-  get(key: K): V | undefined;
+  get(key: K): V;
   put(key: K, value: V): V | undefined;
-  remove(key: K): V | undefined;
+  remove(key: K): V;
   clear(): void;
   keys(): K[];
   values(): V[];

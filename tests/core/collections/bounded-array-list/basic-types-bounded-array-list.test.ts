@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { BoundedArrayList } from "../../../../src/core/collections/bounded-array-list/bounded-array-list";
+import { ElementNotFoundError } from "../../../../src/core/errors/element-not-found-error";
 import { IndexOutOfBoundsError } from "../../../../src/core/errors/index-out-of-bounds-error";
 import { InvalidCapacityError } from "../../../../src/core/errors/invalid-capacity-error";
 import { ListCapacityExceededError } from "../../../../src/core/errors/list-capacity-exceeded-error";
@@ -16,8 +17,8 @@ describe("BoundedArrayList", () => {
   test("adds elements until capacity is reached", () => {
     const list = new BoundedArrayList<number>(2);
 
-    expect(list.add(10)).toBe(true);
-    expect(list.add(20)).toBe(true);
+    list.add(10);
+    list.add(20);
     expect(list.toArray()).toEqual([10, 20]);
   });
 
@@ -60,7 +61,7 @@ describe("BoundedArrayList", () => {
     list.add(3);
     list.add(2);
 
-    expect(list.remove(2)).toBe(true);
+    list.remove(2);
     expect(list.toArray()).toEqual([1, 3, 2]);
 
     const removed = list.removeAt(1);
@@ -78,7 +79,7 @@ describe("BoundedArrayList", () => {
     expect(list.contains("b")).toBe(true);
     expect(list.contains("z")).toBe(false);
     expect(list.indexOf("c")).toBe(2);
-    expect(list.indexOf("z")).toBe(-1);
+    expect(() => list.indexOf("z")).toThrow(ElementNotFoundError);
   });
 
   test("clears all elements and allows reuse", () => {
@@ -92,7 +93,7 @@ describe("BoundedArrayList", () => {
     expect(list.isEmpty()).toBe(true);
     expect(list.toArray()).toEqual([]);
 
-    expect(list.add(9)).toBe(true);
+    list.add(9);
     expect(list.toArray()).toEqual([9]);
   });
 

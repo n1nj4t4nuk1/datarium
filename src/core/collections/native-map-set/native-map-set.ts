@@ -1,5 +1,7 @@
 import type { Set } from "../set";
 import { NativeMap } from "../native-map/native-map";
+import { DuplicateElementError } from "../../errors/duplicate-element-error";
+import { ElementNotFoundError } from "../../errors/element-not-found-error";
 
 export class NativeMapSet<T extends PropertyKey> implements Set<T> {
   private readonly values: NativeMap<T, true>;
@@ -24,22 +26,20 @@ export class NativeMapSet<T extends PropertyKey> implements Set<T> {
     return this.values.containsKey(value);
   }
 
-  add(value: T): boolean {
+  add(value: T): void {
     if (this.contains(value)) {
-      return false;
+      throw new DuplicateElementError(`Element '${String(value)}' already exists in NativeMapSet`);
     }
 
     this.values.put(value, true);
-    return true;
   }
 
-  remove(value: T): boolean {
+  remove(value: T): void {
     if (!this.contains(value)) {
-      return false;
+      throw new ElementNotFoundError(`Element '${String(value)}' not found in NativeMapSet`);
     }
 
     this.values.remove(value);
-    return true;
   }
 
   clear(): void {

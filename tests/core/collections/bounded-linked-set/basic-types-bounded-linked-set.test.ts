@@ -1,5 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { BoundedLinkedSet } from "../../../../src/core/collections/bounded-linked-set/bounded-linked-set";
+import { DuplicateElementError } from "../../../../src/core/errors/duplicate-element-error";
+import { ElementNotFoundError } from "../../../../src/core/errors/element-not-found-error";
 import { InvalidCapacityError } from "../../../../src/core/errors/invalid-capacity-error";
 import { ListCapacityExceededError } from "../../../../src/core/errors/list-capacity-exceeded-error";
 
@@ -12,19 +14,16 @@ describe("BoundedLinkedSet", () => {
     expect(set.toArray()).toEqual([]);
   });
 
-  test("creates a set from initial values without duplicates", () => {
-    const set = new BoundedLinkedSet<number>(3, [3, 1, 2, 2, 1]);
-
-    expect(set.size()).toBe(3);
-    expect(set.toArray()).toEqual([1, 2, 3]);
+  test("throws DuplicateElementError when initial values contain duplicates", () => {
+    expect(() => new BoundedLinkedSet<number>(3, [3, 1, 2, 2, 1])).toThrow(DuplicateElementError);
   });
 
-  test("add returns true for new values and false for duplicates", () => {
+  test("add inserts new values and throws for duplicates", () => {
     const set = new BoundedLinkedSet<number>(2);
 
-    expect(set.add(2)).toBe(true);
-    expect(set.add(1)).toBe(true);
-    expect(set.add(2)).toBe(false);
+    set.add(2);
+    set.add(1);
+    expect(() => set.add(2)).toThrow(DuplicateElementError);
 
     expect(set.size()).toBe(2);
     expect(set.toArray()).toEqual([1, 2]);
@@ -37,11 +36,11 @@ describe("BoundedLinkedSet", () => {
     expect(set.contains("z")).toBe(false);
   });
 
-  test("remove deletes existing value and returns false when absent", () => {
+  test("remove deletes existing value and throws when absent", () => {
     const set = new BoundedLinkedSet<number>(3, [1, 2, 3]);
 
-    expect(set.remove(2)).toBe(true);
-    expect(set.remove(2)).toBe(false);
+    set.remove(2);
+    expect(() => set.remove(2)).toThrow(ElementNotFoundError);
     expect(set.toArray()).toEqual([1, 3]);
   });
 

@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { LambdaArrayList } from "../../../../src/lambda/collections/lambda-array-list/lambda-array-list";
+import { ElementNotFoundError } from "../../../../src/core/errors/element-not-found-error";
 
 class User {
   constructor(
@@ -50,19 +51,19 @@ describe("LambdaArrayList with class type User (unsorted)", () => {
 
     expect(list.contains(user2)).toBe(true);
     expect(list.indexOf(user2)).toBe(1);
-    expect(list.remove(user2)).toBe(true);
+    list.remove(user2);
     expect(list.toArray().map((user) => user.id)).toEqual([1]);
   });
 
-  test("contains/indexOf/remove return false with different references", () => {
+  test("contains/indexOf/remove throw for different references", () => {
     const user1 = new User(1, "Ana");
     const user2 = new User(2, "Luis");
 
     const list = new LambdaArrayList<User>([user1, user2]);
 
     expect(list.contains(new User(2, "Luis"))).toBe(false);
-    expect(list.indexOf(new User(2, "Luis"))).toBe(-1);
-    expect(list.remove(new User(2, "Luis"))).toBe(false);
+    expect(() => list.indexOf(new User(2, "Luis"))).toThrow(ElementNotFoundError);
+    expect(() => list.remove(new User(2, "Luis"))).toThrow(ElementNotFoundError);
     expect(list.toArray().map((user) => user.id)).toEqual([1, 2]);
   });
 });

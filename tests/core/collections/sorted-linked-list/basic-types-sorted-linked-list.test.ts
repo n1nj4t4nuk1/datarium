@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { SortedLinkedList } from "../../../../src/core/collections/sorted-linked-list/sorted-linked-list";
+import { ElementNotFoundError } from "../../../../src/core/errors/element-not-found-error";
 import { IndexOutOfBoundsError } from "../../../../src/core/errors/index-out-of-bounds-error";
 
 describe("SortedLinkedList", () => {
@@ -48,7 +49,7 @@ describe("SortedLinkedList", () => {
     expect(list.contains(3)).toBe(true);
     expect(list.contains(9)).toBe(false);
     expect(list.indexOf(5)).toBe(2);
-    expect(list.indexOf(9)).toBe(-1);
+    expect(() => list.indexOf(9)).toThrow(ElementNotFoundError);
   });
 
   test("throws IndexOutOfBoundsError for invalid indexes", () => {

@@ -3,8 +3,8 @@ export interface SortedList<T> {
   isEmpty(): boolean;
   contains(element: T): boolean;
   get(index: number): T;
-  add(element: T): boolean;
-  remove(element: T): boolean;
+  add(element: T): void;
+  remove(element: T): void;
   removeAt(index: number): T;
   indexOf(element: T): number;
   clear(): void;
