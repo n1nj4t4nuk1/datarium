@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { LambdaArrayList } from "../../../../src/lambda/collections/lambda-array-list/lambda-array-list";
+import { LambdaSortedArrayList } from "../../../../src/lambda/collections/lambda-sorted-array-list/lambda-sorted-array-list";
 
 class User {
   constructor(
@@ -9,12 +9,12 @@ class User {
   ) {}
 }
 
-describe("LambdaArrayList with class type User", () => {
+describe("LambdaSortedArrayList with class type User", () => {
   const orderByAge = (left: User, right: User): number => left.age - right.age;
   const equalById = (left: User, right: User): boolean => left.id === right.id;
 
   test("orders users by age in constructor", () => {
-    const list = new LambdaArrayList<User>(
+    const list = new LambdaSortedArrayList<User>(
       orderByAge,
       [
         new User(1, "Ana", 35),
@@ -28,7 +28,7 @@ describe("LambdaArrayList with class type User", () => {
   });
 
   test("keeps users ordered by age when adding elements", () => {
-    const list = new LambdaArrayList<User>(orderByAge, [new User(1, "Ana", 35)], equalById);
+    const list = new LambdaSortedArrayList<User>(orderByAge, [new User(1, "Ana", 35)], equalById);
 
     list.add(new User(2, "Luis", 22));
     list.add(new User(3, "Marta", 29));
@@ -37,7 +37,7 @@ describe("LambdaArrayList with class type User", () => {
   });
 
   test("uses equality comparator by id for contains and indexOf", () => {
-    const list = new LambdaArrayList<User>(
+    const list = new LambdaSortedArrayList<User>(
       orderByAge,
       [
         new User(1, "Ana", 35),
@@ -51,7 +51,7 @@ describe("LambdaArrayList with class type User", () => {
   });
 
   test("uses equality comparator by id for remove", () => {
-    const list = new LambdaArrayList<User>(
+    const list = new LambdaSortedArrayList<User>(
       orderByAge,
       [
         new User(1, "Ana", 35),
@@ -69,7 +69,7 @@ describe("LambdaArrayList with class type User", () => {
   });
 
   test("set keeps sorted order by age and returns replaced user", () => {
-    const list = new LambdaArrayList<User>(
+    const list = new LambdaSortedArrayList<User>(
       orderByAge,
       [
         new User(1, "Ana", 35),
