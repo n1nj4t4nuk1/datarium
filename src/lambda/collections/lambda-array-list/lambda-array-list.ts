@@ -1,12 +1,12 @@
 import { ArrayList } from "../../../core/collections/array-list/array-list";
-import { BasicNumberComparator } from "../../comparators/basic-number-comparator";
-import type { Comparator } from "../../comparators/comparator";
+import { BasicNumberComparator } from "../../order-comparators/basic-number-comparator";
+import type { OrderComparator } from "../../order-comparators/order-comparator";
 
 export class LambdaArrayList<T> extends ArrayList<T> {
-  private readonly comparator: Comparator<T>;
+  private readonly comparator: OrderComparator<T>;
 
   constructor(
-    comparator: Comparator<T> = BasicNumberComparator as Comparator<T>,
+    comparator: OrderComparator<T> = BasicNumberComparator as OrderComparator<T>,
     initialElements: T[] = [],
   ) {
     super();

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { ReverseBasicNumberComparator } from "../../../src/lambda/comparators/reverse-basic-number-comparator";
+import { ReverseBasicNumberComparator } from "../../../src/lambda/order-comparators/reverse-basic-number-comparator";
 
 describe("ReverseBasicNumberComparator", () => {
   test("returns zero for equal numbers", () => {

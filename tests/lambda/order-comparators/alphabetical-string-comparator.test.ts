@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { AlphabeticalStringComparator } from "../../../src/lambda/comparators/alphabetical-string-comparator";
+import { AlphabeticalStringComparator } from "../../../src/lambda/order-comparators/alphabetical-string-comparator";
 
 describe("AlphabeticalStringComparator", () => {
   test("returns zero for equal strings", () => {

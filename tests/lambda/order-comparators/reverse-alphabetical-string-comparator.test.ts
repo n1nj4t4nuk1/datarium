@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { ReverseAlphabeticalStringComparator } from "../../../src/lambda/comparators/reverse-alphabetical-string-comparator";
+import { ReverseAlphabeticalStringComparator } from "../../../src/lambda/order-comparators/reverse-alphabetical-string-comparator";
 
 describe("ReverseAlphabeticalStringComparator", () => {
   test("returns zero for equal strings", () => {
