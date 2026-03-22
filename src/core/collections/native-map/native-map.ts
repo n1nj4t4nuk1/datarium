@@ -1,15 +1,14 @@
 import type { Map } from "../map";
 
 export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
-  private storage: { [key: string]: V; [key: symbol]: V } = {};
-  private keyOrder: K[] = [];
+  private storage: { [key: string]: K; [key: symbol]: V } = {};
 
   size(): number {
-    return this.keyOrder.length;
+    return this.getStorageKeys().length;
   }
 
   isEmpty(): boolean {
-    return this.keyOrder.length === 0;
+    return this.size() === 0;
   }
 
   containsKey(key: K): boolean {
@@ -18,8 +17,8 @@ export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
   }
 
   containsValue(value: V): boolean {
-    for (const key of this.keyOrder) {
-      if (this.readValue(key) === value) {
+    for (const key of this.getStorageKeys()) {
+      if (this.storage[key] === value) {
         return true;
       }
     }
@@ -32,15 +31,12 @@ export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
       return undefined;
     }
 
-    return this.readValue(key);
+    const storageKey = this.toStorageKey(key);
+    return this.storage[storageKey] as V;
   }
 
   put(key: K, value: V): V | undefined {
     const previous = this.get(key);
-
-    if (!this.containsKey(key)) {
-      this.keyOrder.push(key);
-    }
 
     const storageKey = this.toStorageKey(key);
     this.storage[storageKey] = value;
@@ -57,25 +53,22 @@ export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
     const removedValue = this.storage[storageKey] as V;
     delete this.storage[storageKey];
 
-    this.keyOrder = this.keyOrder.filter((existingKey) => !this.sameStorageKey(existingKey, key));
-
     return removedValue;
   }
 
   clear(): void {
     this.storage = {};
-    this.keyOrder = [];
   }
 
   keys(): K[] {
-    return [...this.keyOrder];
+    return this.getStorageKeys() as K[];
   }
 
   values(): V[] {
     const values: V[] = [];
 
-    for (const key of this.keyOrder) {
-      values.push(this.readValue(key));
+    for (const key of this.getStorageKeys()) {
+      values.push(this.storage[key] as V);
     }
 
     return values;
@@ -84,8 +77,8 @@ export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
   entries(): Array<[K, V]> {
     const entries: Array<[K, V]> = [];
 
-    for (const key of this.keyOrder) {
-      entries.push([key, this.readValue(key)]);
+    for (const key of this.getStorageKeys()) {
+      entries.push([key as K, this.storage[key] as V]);
     }
 
     return entries;
@@ -95,12 +88,9 @@ export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
     return typeof key === "symbol" ? key : String(key);
   }
 
-  private sameStorageKey(first: K, second: K): boolean {
-    return this.toStorageKey(first) === this.toStorageKey(second);
-  }
-
-  private readValue(key: K): V {
-    const storageKey = this.toStorageKey(key);
-    return this.storage[storageKey] as V;
+  private getStorageKeys(): Array<string | symbol> {
+    const stringKeys = Object.keys(this.storage);
+    const symbolKeys = Object.getOwnPropertySymbols(this.storage);
+    return [...stringKeys, ...symbolKeys];
   }
 }

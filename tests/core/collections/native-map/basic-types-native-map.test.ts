@@ -80,7 +80,7 @@ describe("NativeMap", () => {
     ]);
   });
 
-  test("supports numeric keys", () => {
+  test("coerces numeric keys to strings in keys()", () => {
     const map = new NativeMap<number, string>();
 
     map.put(1, "one");
@@ -88,6 +88,6 @@ describe("NativeMap", () => {
 
     expect(map.get(1)).toBe("one");
     expect(map.get(2)).toBe("two");
-    expect(map.keys()).toEqual([1, 2]);
+    expect(map.keys()).toEqual(["1", "2"]);
   });
 });
