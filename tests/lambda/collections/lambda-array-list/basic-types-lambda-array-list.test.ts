@@ -1,5 +1,7 @@
 import { describe, expect, test } from "bun:test";
 import { LambdaArrayList } from "../../../../src/lambda/collections/lambda-array-list/lambda-array-list";
+import { IndexOutOfBoundsError } from "../../../../src/core/errors/index-out-of-bounds-error";
+import { ComparatorInferenceError } from "../../../../src/lambda/errors/comparator-inference-error";
 
 describe("LambdaArrayList with basic types", () => {
   test("infers BasicNumberComparator from first element", () => {
@@ -8,10 +10,10 @@ describe("LambdaArrayList with basic types", () => {
     expect(list.toArray()).toEqual([1, 2, 3, 4]);
   });
 
-  test("throws error when no comparator and no initial elements", () => {
+  test("throws ComparatorInferenceError when no comparator and no initial elements", () => {
     expect(() => {
       new LambdaArrayList<number>();
-    }).toThrow();
+    }).toThrow(ComparatorInferenceError);
   });
 
   test("keeps numbers sorted ascending with explicit comparator", () => {
@@ -62,9 +64,9 @@ describe("LambdaArrayList with basic types", () => {
     expect(list.toArray()).toEqual([1, 4, 5]);
   });
 
-  test("throws RangeError when set uses invalid index", () => {
+  test("throws IndexOutOfBoundsError when set uses invalid index", () => {
     const list = new LambdaArrayList<number>((left, right) => left - right, [1]);
 
-    expect(() => list.set(2, 10)).toThrow(RangeError);
+    expect(() => list.set(2, 10)).toThrow(IndexOutOfBoundsError);
   });
 });

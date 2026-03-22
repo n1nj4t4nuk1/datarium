@@ -1,4 +1,5 @@
 import type { List } from "../list";
+import { IndexOutOfBoundsError } from "../../errors/index-out-of-bounds-error";
 
 class LinkedListNode<T> {
   value: T;
@@ -130,7 +131,7 @@ export class LinkedList<T> implements List<T> {
     }
 
     if (current === null) {
-      throw new RangeError(`Index: ${index}, Size: ${this.length}`);
+      throw new IndexOutOfBoundsError(index, this.length);
     }
 
     return current;
@@ -187,13 +188,13 @@ export class LinkedList<T> implements List<T> {
 
   private checkElementIndex(index: number): void {
     if (index < 0 || index >= this.length) {
-      throw new RangeError(`Index: ${index}, Size: ${this.length}`);
+      throw new IndexOutOfBoundsError(index, this.length);
     }
   }
 
   private checkPositionIndex(index: number): void {
     if (index < 0 || index > this.length) {
-      throw new RangeError(`Index: ${index}, Size: ${this.length}`);
+      throw new IndexOutOfBoundsError(index, this.length);
     }
   }
 }

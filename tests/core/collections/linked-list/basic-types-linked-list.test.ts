@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { LinkedList } from "../../../../src/core/collections/linked-list/linked-list";
+import { IndexOutOfBoundsError } from "../../../../src/core/errors/index-out-of-bounds-error";
 
 describe("LinkedList", () => {
   test("creates an empty list by default", () => {
@@ -74,13 +75,13 @@ describe("LinkedList", () => {
     expect(list.toArray()).toEqual([]);
   });
 
-  test("throws RangeError for invalid indexes", () => {
+  test("throws IndexOutOfBoundsError for invalid indexes", () => {
     const list = new LinkedList<number>([1]);
 
-    expect(() => list.get(-1)).toThrow(RangeError);
-    expect(() => list.get(2)).toThrow(RangeError);
-    expect(() => list.addAt(2, 2)).toThrow(RangeError);
-    expect(() => list.removeAt(5)).toThrow(RangeError);
+    expect(() => list.get(-1)).toThrow(IndexOutOfBoundsError);
+    expect(() => list.get(2)).toThrow(IndexOutOfBoundsError);
+    expect(() => list.addAt(2, 2)).toThrow(IndexOutOfBoundsError);
+    expect(() => list.removeAt(5)).toThrow(IndexOutOfBoundsError);
   });
 
   test("toArray returns a shallow copy", () => {

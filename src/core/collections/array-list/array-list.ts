@@ -1,4 +1,5 @@
 import type { List } from "../list";
+import { IndexOutOfBoundsError } from "../../errors/index-out-of-bounds-error";
 
 export class ArrayList<T> implements List<T> {
   private elements: T[];
@@ -71,13 +72,13 @@ export class ArrayList<T> implements List<T> {
 
   private checkElementIndex(index: number): void {
     if (index < 0 || index >= this.size()) {
-      throw new RangeError(`Index: ${index}, Size: ${this.size()}`);
+      throw new IndexOutOfBoundsError(index, this.size());
     }
   }
 
   private checkPositionIndex(index: number): void {
     if (index < 0 || index > this.size()) {
-      throw new RangeError(`Index: ${index}, Size: ${this.size()}`);
+      throw new IndexOutOfBoundsError(index, this.size());
     }
   }
 }

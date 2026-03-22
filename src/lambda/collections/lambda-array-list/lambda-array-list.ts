@@ -1,4 +1,5 @@
 import { ArrayList } from "../../../core/collections/array-list/array-list";
+import { ComparatorInferenceError } from "../../errors/comparator-inference-error";
 import { inferOrderComparator } from "../../order-comparators/order-comparator-inferrer";
 import type { OrderComparator } from "../../order-comparators/order-comparator";
 
@@ -14,9 +15,7 @@ export class LambdaArrayList<T> extends ArrayList<T> {
     // If comparator is undefined, infer it from the first element
     if (comparator === undefined) {
       if (initialElements.length === 0) {
-        throw new Error(
-          "Cannot infer comparator: no comparator provided and no initial elements to infer from",
-        );
+        throw new ComparatorInferenceError();
       }
       this.comparator = inferOrderComparator(initialElements[0]);
     } else {

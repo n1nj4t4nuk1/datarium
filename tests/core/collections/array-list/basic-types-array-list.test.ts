@@ -1,5 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { ArrayList } from "../../../../src/core/collections/array-list/array-list";
+import { IndexOutOfBoundsError } from "../../../../src/core/errors/index-out-of-bounds-error";
 
 describe("ArrayList", () => {
   test("creates an empty list by default", () => {
@@ -74,13 +75,13 @@ describe("ArrayList", () => {
     expect(list.toArray()).toEqual([]);
   });
 
-  test("throws RangeError for invalid indexes", () => {
+  test("throws IndexOutOfBoundsError for invalid indexes", () => {
     const list = new ArrayList<number>([1]);
 
-    expect(() => list.get(-1)).toThrow(RangeError);
-    expect(() => list.get(2)).toThrow(RangeError);
-    expect(() => list.addAt(2, 2)).toThrow(RangeError);
-    expect(() => list.removeAt(5)).toThrow(RangeError);
+    expect(() => list.get(-1)).toThrow(IndexOutOfBoundsError);
+    expect(() => list.get(2)).toThrow(IndexOutOfBoundsError);
+    expect(() => list.addAt(2, 2)).toThrow(IndexOutOfBoundsError);
+    expect(() => list.removeAt(5)).toThrow(IndexOutOfBoundsError);
   });
 
   test("toArray returns a shallow copy", () => {
