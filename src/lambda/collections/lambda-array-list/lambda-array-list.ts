@@ -1,16 +1,27 @@
 import { ArrayList } from "../../../core/collections/array-list/array-list";
-import { BasicNumberComparator } from "../../order-comparators/basic-number-comparator";
+import { inferOrderComparator } from "../../order-comparators/order-comparator-inferrer";
 import type { OrderComparator } from "../../order-comparators/order-comparator";
 
 export class LambdaArrayList<T> extends ArrayList<T> {
   private readonly comparator: OrderComparator<T>;
 
   constructor(
-    comparator: OrderComparator<T> = BasicNumberComparator as OrderComparator<T>,
+    comparator: OrderComparator<T> | undefined = undefined,
     initialElements: T[] = [],
   ) {
     super();
-    this.comparator = comparator;
+
+    // If comparator is undefined, infer it from the first element
+    if (comparator === undefined) {
+      if (initialElements.length === 0) {
+        throw new Error(
+          "Cannot infer comparator: no comparator provided and no initial elements to infer from",
+        );
+      }
+      this.comparator = inferOrderComparator(initialElements[0]);
+    } else {
+      this.comparator = comparator;
+    }
 
     for (const element of initialElements) {
       this.add(element);

@@ -2,13 +2,19 @@ import { describe, expect, test } from "bun:test";
 import { LambdaArrayList } from "../../../../src/lambda/collections/lambda-array-list/lambda-array-list";
 
 describe("LambdaArrayList with basic types", () => {
-  test("uses BasicNumberComparator by default for numbers", () => {
+  test("infers BasicNumberComparator from first element", () => {
     const list = new LambdaArrayList<number>(undefined, [4, 1, 3, 2]);
 
     expect(list.toArray()).toEqual([1, 2, 3, 4]);
   });
 
-  test("keeps numbers sorted ascending on add", () => {
+  test("throws error when no comparator and no initial elements", () => {
+    expect(() => {
+      new LambdaArrayList<number>();
+    }).toThrow();
+  });
+
+  test("keeps numbers sorted ascending with explicit comparator", () => {
     const list = new LambdaArrayList<number>((left, right) => left - right);
 
     list.add(3);
@@ -18,32 +24,29 @@ describe("LambdaArrayList with basic types", () => {
     expect(list.toArray()).toEqual([1, 2, 3]);
   });
 
-  test("sorts initial number values in constructor", () => {
-    const list = new LambdaArrayList<number>((left, right) => left - right, [5, 1, 4, 2]);
+  test("sorts initial number values using inferred comparator", () => {
+    const list = new LambdaArrayList<number>(undefined, [5, 1, 4, 2]);
 
     expect(list.toArray()).toEqual([1, 2, 4, 5]);
   });
 
-  test("keeps float values sorted", () => {
-    const list = new LambdaArrayList<number>((left, right) => left - right, [3.14, 2.71, 1.41]);
-
-    list.add(2.5);
+  test("keeps float values sorted with inferred comparator", () => {
+    const list = new LambdaArrayList<number>(undefined, [3.14, 2.71, 1.41, 2.5]);
 
     expect(list.toArray()).toEqual([1.41, 2.5, 2.71, 3.14]);
   });
 
-  test("keeps strings sorted alphabetically", () => {
-    const list = new LambdaArrayList<string>((left, right) => left.localeCompare(right));
-
-    list.add("zebra");
-    list.add("apple");
-    list.add("banana");
+  test("keeps strings sorted alphabetically with inferred comparator", () => {
+    const list = new LambdaArrayList<string>(undefined, ["zebra", "apple", "banana"]);
 
     expect(list.toArray()).toEqual(["apple", "banana", "zebra"]);
   });
 
-  test("addAt keeps sorted order even with arbitrary index", () => {
-    const list = new LambdaArrayList<number>((left, right) => left - right, [10, 30]);
+  test("addAt keeps sorted order with inferred comparator", () => {
+    const list = new LambdaArrayList<number>(
+      (left, right) => left - right,
+      [10, 30],
+    );
 
     list.addAt(0, 20);
 
