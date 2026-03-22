@@ -1,5 +1,8 @@
 {
   "name": "datarium",
+  "scripts": {
+    "test": "bun test"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },

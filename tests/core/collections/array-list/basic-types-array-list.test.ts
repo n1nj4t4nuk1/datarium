@@ -1,0 +1,95 @@
+import { describe, expect, test } from "bun:test";
+import { ArrayList } from "../../../../src/core/collections/array-list/array-list";
+
+describe("ArrayList", () => {
+  test("creates an empty list by default", () => {
+    const list = new ArrayList<number>();
+
+    expect(list.size()).toBe(0);
+    expect(list.isEmpty()).toBe(true);
+    expect(list.toArray()).toEqual([]);
+  });
+
+  test("creates a list from initial elements", () => {
+    const list = new ArrayList<number>([1, 2, 3]);
+
+    expect(list.size()).toBe(3);
+    expect(list.get(0)).toBe(1);
+    expect(list.get(2)).toBe(3);
+  });
+
+  test("adds elements at the end", () => {
+    const list = new ArrayList<number>();
+
+    expect(list.add(10)).toBe(true);
+    expect(list.add(20)).toBe(true);
+    expect(list.toArray()).toEqual([10, 20]);
+  });
+
+  test("inserts elements at a specific position", () => {
+    const list = new ArrayList<number>([1, 3]);
+
+    list.addAt(1, 2);
+
+    expect(list.toArray()).toEqual([1, 2, 3]);
+  });
+
+  test("replaces elements and returns previous value", () => {
+    const list = new ArrayList<number>([5, 10]);
+
+    const previous = list.set(1, 15);
+
+    expect(previous).toBe(10);
+    expect(list.toArray()).toEqual([5, 15]);
+  });
+
+  test("removes by value and by index", () => {
+    const list = new ArrayList<number>([1, 2, 3, 2]);
+
+    expect(list.remove(2)).toBe(true);
+    expect(list.toArray()).toEqual([1, 3, 2]);
+
+    const removed = list.removeAt(1);
+
+    expect(removed).toBe(3);
+    expect(list.toArray()).toEqual([1, 2]);
+  });
+
+  test("supports contains and indexOf", () => {
+    const list = new ArrayList<string>(["a", "b", "c"]);
+
+    expect(list.contains("b")).toBe(true);
+    expect(list.contains("z")).toBe(false);
+    expect(list.indexOf("c")).toBe(2);
+    expect(list.indexOf("z")).toBe(-1);
+  });
+
+  test("clears all elements", () => {
+    const list = new ArrayList<number>([1, 2, 3]);
+
+    list.clear();
+
+    expect(list.size()).toBe(0);
+    expect(list.isEmpty()).toBe(true);
+    expect(list.toArray()).toEqual([]);
+  });
+
+  test("throws RangeError for invalid indexes", () => {
+    const list = new ArrayList<number>([1]);
+
+    expect(() => list.get(-1)).toThrow(RangeError);
+    expect(() => list.get(2)).toThrow(RangeError);
+    expect(() => list.addAt(2, 2)).toThrow(RangeError);
+    expect(() => list.removeAt(5)).toThrow(RangeError);
+  });
+
+  test("toArray returns a shallow copy", () => {
+    const list = new ArrayList<number>([1, 2, 3]);
+    const snapshot = list.toArray();
+
+    snapshot.push(4);
+
+    expect(snapshot).toEqual([1, 2, 3, 4]);
+    expect(list.toArray()).toEqual([1, 2, 3]);
+  });
+});
