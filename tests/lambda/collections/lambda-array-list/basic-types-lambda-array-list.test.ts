@@ -2,6 +2,12 @@ import { describe, expect, test } from "bun:test";
 import { LambdaArrayList } from "../../../../src/lambda/collections/lambda-array-list/lambda-array-list";
 
 describe("LambdaArrayList with basic types", () => {
+  test("uses BasicNumberComparator by default for numbers", () => {
+    const list = new LambdaArrayList<number>(undefined, [4, 1, 3, 2]);
+
+    expect(list.toArray()).toEqual([1, 2, 3, 4]);
+  });
+
   test("keeps numbers sorted ascending on add", () => {
     const list = new LambdaArrayList<number>((left, right) => left - right);
 

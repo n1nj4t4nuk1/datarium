@@ -1,11 +1,15 @@
 import { ArrayList } from "../../../core/collections/array-list/array-list";
+import { BasicNumberComparator } from "../../comparators/basic-number-comparator";
 
 export type Comparator<T> = (left: T, right: T) => number;
 
 export class LambdaArrayList<T> extends ArrayList<T> {
   private readonly comparator: Comparator<T>;
 
-  constructor(comparator: Comparator<T>, initialElements: T[] = []) {
+  constructor(
+    comparator: Comparator<T> = BasicNumberComparator as Comparator<T>,
+    initialElements: T[] = [],
+  ) {
     super();
     this.comparator = comparator;
 
