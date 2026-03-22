@@ -30,13 +30,6 @@ Run all tests across the project:
 bun run test
 ```
 
-Individual test suites:
-
-```bash
-bun test tests/core/collections/array-list/array-list.test.ts
-bun test tests/core/collections/linked-list/linked-list.test.ts
-```
-
 ## Usage Examples
 
 ### ArrayList
