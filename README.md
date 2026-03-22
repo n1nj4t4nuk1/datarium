@@ -10,7 +10,7 @@ A TypeScript library providing common data structures that are missing from Java
   - `List<T>` - Common interface for list implementations
 
 - **Lambda-based Variants** (`src/lambda/collections/`)
-  - `SortedArrayList<T>` - Self-ordering ArrayList with custom comparator
+  - `LambdaArrayList<T>` - Self-ordering ArrayList with custom comparator
 
 - **Shared Abstractions**
   - `Set<T>` - Set interface
@@ -70,18 +70,18 @@ list.clear();
 list.isEmpty();        // true
 ```
 
-### SortedArrayList
+### LambdaArrayList
 
 ```typescript
-import { SortedArrayList } from "./src/lambda/collections/sorted-array-list/sorted-array-list";
+import { LambdaArrayList } from "./src/lambda/collections/lambda-array-list/lambda-array-list";
 
 // Numbers sorted in ascending order
-const numbers = new SortedArrayList<number>((a, b) => a - b, [3, 1, 2]);
+const numbers = new LambdaArrayList<number>((a, b) => a - b, [3, 1, 2]);
 numbers.add(0);        // Inserted at start automatically
 numbers.toArray();     // [0, 1, 2, 3]
 
 // Strings sorted alphabetically
-const words = new SortedArrayList<string>(
+const words = new LambdaArrayList<string>(
   (a, b) => a.localeCompare(b)
 );
 words.add("zebra");
@@ -105,8 +105,8 @@ src/
       set.ts                           # Set<T> interface
   lambda/
     collections/
-      sorted-array-list/
-        sorted-array-list.ts           # SortedArrayList<T> implementation
+      lambda-array-list/
+        lambda-array-list.ts           # LambdaArrayList<T> implementation
 
 tests/
   core/collections/
@@ -131,7 +131,7 @@ Tests automatically run on every push via GitHub Actions (configured for Bun 1.2
 
 ## Comparison: List Implementations
 
-| Operation | ArrayList | LinkedList | SortedArrayList |
+| Operation | ArrayList | LinkedList | LambdaArrayList |
 |-----------|-----------|-----------|----------|
 | Access `get(i)` | O(1) | O(n) | O(n) |
 | Insert at end | O(1) | O(1) | O(n) |

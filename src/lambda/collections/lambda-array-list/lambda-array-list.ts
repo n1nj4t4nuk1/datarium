@@ -2,7 +2,7 @@ import { ArrayList } from "../../../core/collections/array-list/array-list";
 
 export type Comparator<T> = (left: T, right: T) => number;
 
-export class SortedArrayList<T> extends ArrayList<T> {
+export class LambdaArrayList<T> extends ArrayList<T> {
   private readonly comparator: Comparator<T>;
 
   constructor(comparator: Comparator<T>, initialElements: T[] = []) {
