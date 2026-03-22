@@ -69,4 +69,38 @@ describe("LambdaArrayList with basic types", () => {
 
     expect(() => list.set(2, 10)).toThrow(IndexOutOfBoundsError);
   });
+
+  test("uses inferred equality comparator for number contains/indexOf/remove", () => {
+    const list = new LambdaArrayList<number>(undefined, [3, 1, 2]);
+
+    expect(list.contains(2)).toBe(true);
+    expect(list.indexOf(2)).toBe(1);
+    expect(list.remove(2)).toBe(true);
+    expect(list.toArray()).toEqual([1, 3]);
+  });
+
+  test("uses inferred equality comparator for string contains/indexOf/remove", () => {
+    const list = new LambdaArrayList<string>(undefined, ["zebra", "apple", "banana"]);
+
+    expect(list.contains("banana")).toBe(true);
+    expect(list.indexOf("banana")).toBe(1);
+    expect(list.remove("banana")).toBe(true);
+    expect(list.toArray()).toEqual(["apple", "zebra"]);
+  });
+
+  test("uses custom equality comparator when provided", () => {
+    const list = new LambdaArrayList<{ id: number; label: string }>(
+      (left, right) => left.id - right.id,
+      [
+        { id: 1, label: "one" },
+        { id: 2, label: "two" },
+      ],
+      (left, right) => left.id === right.id,
+    );
+
+    expect(list.contains({ id: 2, label: "other" })).toBe(true);
+    expect(list.indexOf({ id: 2, label: "changed" })).toBe(1);
+    expect(list.remove({ id: 2, label: "ignored" })).toBe(true);
+    expect(list.toArray()).toEqual([{ id: 1, label: "one" }]);
+  });
 });

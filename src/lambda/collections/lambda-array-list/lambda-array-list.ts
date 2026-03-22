@@ -1,14 +1,18 @@
 import { ArrayList } from "../../../core/collections/array-list/array-list";
 import { ComparatorInferenceError } from "../../errors/comparator-inference-error";
+import { inferEqualityComparator } from "../../equality-comparators/equality-comparator-inferrer";
+import type { EqualityComparator } from "../../equality-comparators/equality-comparator";
 import { inferOrderComparator } from "../../order-comparators/order-comparator-inferrer";
 import type { OrderComparator } from "../../order-comparators/order-comparator";
 
 export class LambdaArrayList<T> extends ArrayList<T> {
   private readonly comparator: OrderComparator<T>;
+  private equalityComparator: EqualityComparator<T> | undefined;
 
   constructor(
     comparator: OrderComparator<T> | undefined = undefined,
     initialElements: T[] = [],
+    equalityComparator: EqualityComparator<T> | undefined = undefined,
   ) {
     super();
 
@@ -20,6 +24,12 @@ export class LambdaArrayList<T> extends ArrayList<T> {
       this.comparator = inferOrderComparator(initialElements[0]);
     } else {
       this.comparator = comparator;
+    }
+
+    if (equalityComparator !== undefined) {
+      this.equalityComparator = equalityComparator;
+    } else if (initialElements.length > 0) {
+      this.equalityComparator = inferEqualityComparator(initialElements[0]);
     }
 
     for (const element of initialElements) {
@@ -43,6 +53,32 @@ export class LambdaArrayList<T> extends ArrayList<T> {
     return previous;
   }
 
+  override contains(element: T): boolean {
+    return this.indexOf(element) !== -1;
+  }
+
+  override indexOf(element: T): number {
+    const equalityComparator = this.getEqualityComparator(element);
+
+    for (let index = 0; index < this.size(); index += 1) {
+      if (equalityComparator(this.get(index), element)) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  override remove(element: T): boolean {
+    const index = this.indexOf(element);
+    if (index === -1) {
+      return false;
+    }
+
+    super.removeAt(index);
+    return true;
+  }
+
   private findInsertionIndex(element: T): number {
     let low = 0;
     let high = this.size();
@@ -60,5 +96,13 @@ export class LambdaArrayList<T> extends ArrayList<T> {
     }
 
     return low;
+  }
+
+  private getEqualityComparator(sample: T): EqualityComparator<T> {
+    if (this.equalityComparator === undefined) {
+      this.equalityComparator = inferEqualityComparator(sample);
+    }
+
+    return this.equalityComparator;
   }
 }
