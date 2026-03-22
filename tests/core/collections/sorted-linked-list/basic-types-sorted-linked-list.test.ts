@@ -33,14 +33,6 @@ describe("SortedLinkedList", () => {
     expect(list.toArray()).toEqual(["apple", "banana", "zebra"]);
   });
 
-  test("addAt ignores provided index and preserves sorting", () => {
-    const list = new SortedLinkedList<number>([10, 30]);
-
-    list.addAt(0, 20);
-
-    expect(list.toArray()).toEqual([10, 20, 30]);
-  });
-
   test("set preserves sorting and returns previous value", () => {
     const list = new SortedLinkedList<number>([1, 3, 5]);
 

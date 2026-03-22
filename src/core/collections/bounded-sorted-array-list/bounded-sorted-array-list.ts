@@ -16,10 +16,6 @@ export class BoundedSortedArrayList<T> extends BoundedArrayList<T> implements So
     return true;
   }
 
-  override addAt(_index: number, element: T): void {
-    this.add(element);
-  }
-
   override set(index: number, element: T): T {
     const previous = super.removeAt(index);
     this.add(element);
