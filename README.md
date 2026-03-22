@@ -9,8 +9,9 @@ A TypeScript library providing common data structures that are missing from Java
   - `LinkedList<T>` - Doubly-linked list implementation
   - `List<T>` - Common interface for list implementations
 
-- **Lambda-based Variants** (`src/lambda/collections/`)
-  - `LambdaArrayList<T>` - Self-ordering ArrayList with custom comparator
+- **Strategy-based Variants** (`src/strategy/collections/`)
+  - `StrategyArrayList<T>` - ArrayList variant
+  - `StrategySortedArrayList<T>` - Self-ordering ArrayList with custom comparator
 
 - **Shared Abstractions**
   - `Set<T>` - Set interface
@@ -39,11 +40,11 @@ import { ArrayList } from "./src/core/collections/array-list/array-list";
 
 const list = new ArrayList<number>([1, 2, 3]);
 
-list.add(4);           // true
+list.add(4);
 list.addAt(1, 10);     // insert at index 1
 list.get(0);           // 1
 list.set(0, 5);        // 5 (returns previous)
-list.remove(2);        // true
+list.remove(2);
 list.size();           // 4
 list.toArray();        // [5, 10, 1, 3, 4]
 ```
@@ -63,18 +64,18 @@ list.clear();
 list.isEmpty();        // true
 ```
 
-### LambdaArrayList
+### StrategySortedArrayList
 
 ```typescript
-import { LambdaArrayList } from "./src/lambda/collections/lambda-array-list/lambda-array-list";
+import { StrategySortedArrayList } from "./src/strategy/collections/strategy-sorted-array-list/strategy-sorted-array-list";
 
 // Numbers sorted in ascending order
-const numbers = new LambdaArrayList<number>((a, b) => a - b, [3, 1, 2]);
+const numbers = new StrategySortedArrayList<number>((a, b) => a - b, [3, 1, 2]);
 numbers.add(0);        // Inserted at start automatically
 numbers.toArray();     // [0, 1, 2, 3]
 
 // Strings sorted alphabetically
-const words = new LambdaArrayList<string>(
+const words = new StrategySortedArrayList<string>(
   (a, b) => a.localeCompare(b)
 );
 words.add("zebra");
@@ -96,10 +97,12 @@ src/
         linked-list.ts                 # LinkedList<T> implementation
       hasheable.ts                     # Hashable interface
       set.ts                           # Set<T> interface
-  lambda/
+  strategy/
     collections/
-      lambda-array-list/
-        lambda-array-list.ts           # LambdaArrayList<T> implementation
+      strategy-array-list/
+        strategy-array-list.ts         # StrategyArrayList<T> implementation
+      strategy-sorted-array-list/
+        strategy-sorted-array-list.ts  # StrategySortedArrayList<T> implementation
 
 tests/
   core/collections/
@@ -114,7 +117,7 @@ tests/
 ### Adding New Data Structures
 
 1. **Core structures** go in `src/core/collections/{structure-name}/`
-2. **Lambda-based variants** go in `src/lambda/collections/{structure-name}/`
+2. **Strategy-based variants** go in `src/strategy/collections/{structure-name}/`
 3. Add corresponding tests in `tests/` with the same path structure
 4. All implementations must follow their interface contract
 
@@ -124,7 +127,7 @@ Tests automatically run on every push via GitHub Actions (configured for Bun 1.2
 
 ## Comparison: List Implementations
 
-| Operation | ArrayList | LinkedList | LambdaArrayList |
+| Operation | ArrayList | LinkedList | StrategySortedArrayList |
 |-----------|-----------|-----------|----------|
 | Access `get(i)` | O(1) | O(n) | O(n) |
 | Insert at end | O(1) | O(1) | O(n) |
