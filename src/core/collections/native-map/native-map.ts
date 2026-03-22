@@ -1,7 +1,7 @@
 import type { Map } from "../map";
 
 export class NativeMap<K extends PropertyKey, V> implements Map<K, V> {
-  private storage: { [key: string]: K; [key: symbol]: V } = {};
+  private storage: { [key: string]: V; [key: symbol]: V } = {};
 
   size(): number {
     return this.getStorageKeys().length;
