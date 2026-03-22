@@ -1,1 +1,3 @@
-export type EqualityComparator<T> = (left: T, right: T) => boolean;
+export interface EqualityComparator<T> {
+	(left: T, right: T): boolean;
+}

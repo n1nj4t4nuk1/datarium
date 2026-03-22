@@ -1,7 +1,6 @@
 import { ArrayList } from "../../../core/collections/array-list/array-list";
 import { BasicNumberComparator } from "../../comparators/basic-number-comparator";
-
-export type Comparator<T> = (left: T, right: T) => number;
+import type { Comparator } from "../../comparators/comparator";
 
 export class LambdaArrayList<T> extends ArrayList<T> {
   private readonly comparator: Comparator<T>;
