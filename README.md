@@ -4,18 +4,36 @@ A TypeScript library providing common data structures that are missing from Java
 
 ## Features
 
-- **Core Data Structures** (`src/core/collections/`)
-  - `ArrayList<T>` - Dynamic array implementation
-  - `LinkedList<T>` - Doubly-linked list implementation
-  - `List<T>` - Common interface for list implementations
+- **Core Lists** (`src/core/collections/`)
+  - `ArrayList<T>`, `LinkedList<T>`
+  - `BoundedArrayList<T>`, `BoundedLinkedList<T>`
+  - `SortedArrayList<T>`, `SortedLinkedList<T>`
+  - `BoundedSortedArrayList<T>`, `BoundedSortedLinkedList<T>`
 
-- **Strategy-based Variants** (`src/strategy/collections/`)
-  - `StrategyArrayList<T>` - ArrayList variant
-  - `StrategySortedArrayList<T>` - Self-ordering ArrayList with custom comparator
+- **Core Stacks**
+  - `ArrayStack<T>`, `LinkedStack<T>`
+  - `BoundedArrayStack<T>`, `BoundedLinkedStack<T>`
 
-- **Shared Abstractions**
-  - `Set<T>` - Set interface
-  - `Hashable` - Interface for hashable objects
+- **Core Queues**
+  - `ArrayQueue<T>`, `LinkedQueue<T>`
+  - `BoundedArrayQueue<T>`, `BoundedLinkedQueue<T>`
+
+- **Core Sets**
+  - `ArraySet<T>`, `LinkedSet<T>`
+  - `BoundedArraySet<T>`, `BoundedLinkedSet<T>`
+  - `NativeMapSet<T extends PropertyKey>`
+
+- **Core Maps**
+  - `Map<K, V>` interface
+  - `NativeMap<K extends PropertyKey, V>` backed by native object storage `{}`
+
+- **Strategy Variants** (`src/strategy/collections/`)
+  - `StrategyArrayList<T>`
+  - `StrategyBoundedArrayList<T>`
+  - `StrategySortedArrayList<T>` (uses strategy comparators)
+
+- **Error-first API (core)**
+  - Mutations/searches that cannot be resolved throw descriptive custom errors instead of returning sentinel values (`false`, `-1`, `undefined`, `null`).
 
 ## Installation
 
@@ -28,7 +46,7 @@ bun install
 Run all tests across the project:
 
 ```bash
-bun run test
+bun test
 ```
 
 ## Usage Examples
@@ -45,23 +63,25 @@ list.addAt(1, 10);     // insert at index 1
 list.get(0);           // 1
 list.set(0, 5);        // 5 (returns previous)
 list.remove(2);
-list.size();           // 4
-list.toArray();        // [5, 10, 1, 3, 4]
+list.size();
+list.toArray();
 ```
 
-### LinkedList
+### NativeMap backed by {}
 
 ```typescript
-import { LinkedList } from "./src/core/collections/linked-list/linked-list";
+import { NativeMap } from "./src/core/collections/native-map/native-map";
 
-const list = new LinkedList<string>(["a", "b", "c"]);
+const map = new NativeMap<number, string>();
 
-list.add("d");
-list.contains("b");    // true
-list.indexOf("c");     // 2
-list.removeAt(1);      // "b"
-list.clear();
-list.isEmpty();        // true
+map.put(1, "one");
+map.put(2, "two");
+
+map.get(1);             // "one"
+map.keys();             // ["1", "2"] (numeric keys are coerced to string in object storage)
+
+// Throws KeyNotFoundError
+// map.get(999);
 ```
 
 ### StrategySortedArrayList
@@ -84,32 +104,81 @@ words.add("banana");
 words.toArray();       // ["apple", "banana", "zebra"]
 ```
 
+### Custom Error Semantics (core)
+
+Common custom errors in `src/core/errors/`:
+
+- `IndexOutOfBoundsError`
+- `ListCapacityExceededError`
+- `InvalidCapacityError`
+- `ElementNotFoundError`
+- `DuplicateElementError`
+- `KeyNotFoundError`
+- `EmptyStackError`
+- `EmptyQueueError`
+
 ## Project Structure
 
 ```
 src/
   core/
     collections/
-      list.ts                          # List<T> interface
+      # lists
       array-list/
-        array-list.ts                  # ArrayList<T> implementation
       linked-list/
-        linked-list.ts                 # LinkedList<T> implementation
-      hasheable.ts                     # Hashable interface
-      set.ts                           # Set<T> interface
+      bounded-array-list/
+      bounded-linked-list/
+      sorted-array-list/
+      sorted-linked-list/
+      bounded-sorted-array-list/
+      bounded-sorted-linked-list/
+
+      # stacks
+      array-stack/
+      linked-stack/
+      bounded-array-stack/
+      bounded-linked-stack/
+
+      # queues
+      array-queue/
+      linked-queue/
+      bounded-array-queue/
+      bounded-linked-queue/
+
+      # sets and map
+      array-set/
+      linked-set/
+      bounded-array-set/
+      bounded-linked-set/
+      native-map/
+      native-map-set/
+
+      list.ts
+      sorted-list.ts
+      set.ts
+      queue.ts
+      map.ts
+    errors/
+      *.ts                             # custom domain errors
+
   strategy/
     collections/
       strategy-array-list/
-        strategy-array-list.ts         # StrategyArrayList<T> implementation
+        strategy-array-list.ts
+      strategy-bounded-array-list/
+        strategy-bounded-array-list.ts
       strategy-sorted-array-list/
-        strategy-sorted-array-list.ts  # StrategySortedArrayList<T> implementation
+        strategy-sorted-array-list.ts
+    order-comparators/
+    equality-comparators/
+    hash-calculators/
+    errors/
 
 tests/
-  core/collections/
-    array-list/array-list.test.ts
-    linked-list/linked-list.test.ts
+  core/
+  strategy/
   types/
-    bun-test.d.ts                      # Bun test types shim
+    bun-test.d.ts
 ```
 
 ## Development
@@ -119,21 +188,11 @@ tests/
 1. **Core structures** go in `src/core/collections/{structure-name}/`
 2. **Strategy-based variants** go in `src/strategy/collections/{structure-name}/`
 3. Add corresponding tests in `tests/` with the same path structure
-4. All implementations must follow their interface contract
+4. For **core**, prefer exception-driven failure behavior over sentinel return values
 
 ### Running CI/CD
 
 Tests automatically run on every push via GitHub Actions (configured for Bun 1.2.19 and 1.3.11 matrix).
-
-## Comparison: List Implementations
-
-| Operation | ArrayList | LinkedList | StrategySortedArrayList |
-|-----------|-----------|-----------|----------|
-| Access `get(i)` | O(1) | O(n) | O(n) |
-| Insert at end | O(1) | O(1) | O(n) |
-| Insert at index | O(n) | O(n) | O(n) with binary search |
-| Remove | O(n) | O(n) | O(n) |
-| Search | O(n) | O(n) | O(n) |
 
 ## License
 
