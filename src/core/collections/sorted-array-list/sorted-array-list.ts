@@ -1,6 +1,7 @@
 import { ArrayList } from "../array-list/array-list";
+import type { SortedList } from "../sorted-list";
 
-export class SortedArrayList<T> extends ArrayList<T> {
+export class SortedArrayList<T> extends ArrayList<T> implements SortedList<T> {
   constructor(initialElements: T[] = []) {
     super();
 

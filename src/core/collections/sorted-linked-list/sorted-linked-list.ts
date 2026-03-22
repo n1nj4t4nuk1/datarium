@@ -1,6 +1,7 @@
 import { LinkedList } from "../linked-list/linked-list";
+import type { SortedList } from "../sorted-list";
 
-export class SortedLinkedList<T> extends LinkedList<T> {
+export class SortedLinkedList<T> extends LinkedList<T> implements SortedList<T> {
   constructor(initialElements: T[] = []) {
     super();
 

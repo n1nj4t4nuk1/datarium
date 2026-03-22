@@ -1,6 +1,7 @@
 import { BoundedArrayList } from "../bounded-array-list/bounded-array-list";
+import type { SortedList } from "../sorted-list";
 
-export class BoundedSortedArrayList<T> extends BoundedArrayList<T> {
+export class BoundedSortedArrayList<T> extends BoundedArrayList<T> implements SortedList<T> {
   constructor(capacity: number, initialElements: T[] = []) {
     super(capacity);
 
