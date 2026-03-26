@@ -27,11 +27,11 @@ A TypeScript library providing common data structures that are missing from Java
   - `Map<K, V>` interface
   - `NativeMap<K extends PropertyKey, V>` backed by native object storage `{}`
 
-- **Strategy Variants** (`src/strategy/collections/`)
-  - `StrategySortedArrayList<T>`, `StrategySortedLinkedList<T>`
-  - `StrategyBoundedSortedArrayList<T>`, `StrategyBoundedSortedLinkedList<T>`
-  - `StrategySortedArraySet<T>`, `StrategySortedLinkedSet<T>`
-  - `StrategyBoundedSortedSet<T>`, `StrategyBoundedSortedLinkedSet<T>`
+- **Lambda Variants** (`src/lambda/collections/`)
+  - `LambdaSortedArrayList<T>`, `LambdaSortedLinkedList<T>`
+  - `LambdaBoundedSortedArrayList<T>`, `LambdaBoundedSortedLinkedList<T>`
+  - `LambdaSortedArraySet<T>`, `LambdaSortedLinkedSet<T>`
+  - `LambdaBoundedSortedSet<T>`, `LambdaBoundedSortedLinkedSet<T>`
 
 - **Error-first API (core)**
   - Mutations/searches that cannot be resolved throw descriptive custom errors instead of returning sentinel values (`false`, `-1`, `undefined`, `null`).
@@ -85,18 +85,18 @@ map.keys();             // ["1", "2"] (numeric keys are coerced to string in obj
 // map.get(999);
 ```
 
-### StrategySortedArrayList
+### LambdaSortedArrayList
 
 ```typescript
-import { StrategySortedArrayList } from "./src/strategy/collections/lists/strategy-sorted-array-list/strategy-sorted-array-list";
+import { LambdaSortedArrayList } from "./src/lambda/collections/lists/lambda-sorted-array-list/lambda-sorted-array-list";
 
 // Numbers sorted in ascending order
-const numbers = new StrategySortedArrayList<number>((a, b) => a - b, [3, 1, 2]);
+const numbers = new LambdaSortedArrayList<number>((a, b) => a - b, [3, 1, 2]);
 numbers.add(0);        // Inserted at start automatically
 numbers.toArray();     // [0, 1, 2, 3]
 
 // Strings sorted alphabetically
-const words = new StrategySortedArrayList<string>(
+const words = new LambdaSortedArrayList<string>(
   (a, b) => a.localeCompare(b)
 );
 words.add("zebra");
@@ -162,7 +162,7 @@ src/
     errors/
       *.ts                             # custom domain errors
 
-  strategy/
+  lambda/
     collections/
       lists/
       sets/
@@ -173,7 +173,7 @@ src/
 
 tests/
   core/
-  strategy/
+  lambda/
   types/
     bun-test.d.ts
 ```
@@ -183,7 +183,7 @@ tests/
 ### Adding New Data Structures
 
 1. **Core structures** go in `src/core/collections/{structure-name}/`
-2. **Strategy-based variants** go in `src/strategy/collections/{structure-name}/`
+2. **Lambda-based variants** go in `src/lambda/collections/{structure-name}/`
 3. Add corresponding tests in `tests/` with the same path structure
 4. For **core**, prefer exception-driven failure behavior over sentinel return values
 
