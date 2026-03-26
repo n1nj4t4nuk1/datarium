@@ -1,10 +1,17 @@
 {
   "name": "datarium",
   "scripts": {
-    "test": "bun test"
+    "test": "bun test",
+    "bench:lists": "bun run tests/benchmarks/lists/compare-lists.ts",
+    "bench:sets": "bun run tests/benchmarks/sets/compare-sets.ts",
+    "bench:queues": "bun run tests/benchmarks/queues/compare-queues.ts",
+    "bench:stacks": "bun run tests/benchmarks/stacks/compare-stacks.ts",
+    "bench:maps": "bun run tests/benchmarks/maps/compare-maps.ts",
+    "bench:all": "bun run bench:lists && bun run bench:sets && bun run bench:queues && bun run bench:stacks && bun run bench:maps"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "tinybench": "^6.0.0"
   },
   "peerDependencies": {
     "typescript": "^5"
