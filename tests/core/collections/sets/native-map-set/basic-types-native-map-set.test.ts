@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { NativeMapSet } from "../../../../../src/core/collections/sets/native-map-set/native-map-set";
-import { DuplicateElementError } from "../../../../../src/core/errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 
 describe("NativeMapSet", () => {
@@ -12,16 +11,19 @@ describe("NativeMapSet", () => {
     expect(set.toArray()).toEqual([]);
   });
 
-  test("throws DuplicateElementError when initial values contain duplicates", () => {
-    expect(() => new NativeMapSet<string>(["b", "a", "b", "c", "a"])).toThrow(DuplicateElementError);
+  test("ignores duplicate initial values", () => {
+    const set = new NativeMapSet<string>(["b", "a", "b", "c", "a"]);
+
+    expect(set.size()).toBe(3);
+    expect(set.toArray()).toEqual(["b", "a", "c"]);
   });
 
-  test("add inserts new values and throws for duplicates", () => {
+  test("add inserts new values and ignores duplicates", () => {
     const set = new NativeMapSet<string>();
 
     set.add("one");
     set.add("two");
-    expect(() => set.add("one")).toThrow(DuplicateElementError);
+    set.add("one");
 
     expect(set.size()).toBe(2);
     expect(set.toArray()).toEqual(["one", "two"]);

@@ -1,6 +1,5 @@
 import type { Set } from "../../../../core/collections/sets/set";
 import { StrategyBoundedSortedArrayList } from "../../lists/strategy-bounded-sorted-array-list/strategy-bounded-sorted-array-list";
-import { DuplicateElementError } from "../../../../core/errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../../core/errors/element-not-found-error";
 import type { OrderComparator } from "../../../order-comparators/order-comparator";
 import type { EqualityComparator } from "../../../equality-comparators/equality-comparator";
@@ -60,9 +59,7 @@ export class StrategyBoundedSortedSet<T> implements Set<T> {
 
   add(value: T): void {
     if (this.contains(value)) {
-      throw new DuplicateElementError(
-        `Element '${String(value)}' already exists in StrategyBoundedSortedSet`,
-      );
+      return;
     }
 
     this.values.add(value);

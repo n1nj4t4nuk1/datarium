@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { ArraySet } from "../../../../../src/core/collections/sets/array-set/array-set";
-import { DuplicateElementError } from "../../../../../src/core/errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 
 describe("ArraySet", () => {
@@ -12,16 +11,19 @@ describe("ArraySet", () => {
     expect(set.toArray()).toEqual([]);
   });
 
-  test("throws DuplicateElementError when initial values contain duplicates", () => {
-    expect(() => new ArraySet<number>([3, 1, 2, 2, 1])).toThrow(DuplicateElementError);
+  test("ignores duplicate initial values", () => {
+    const set = new ArraySet<number>([3, 1, 2, 2, 1]);
+
+    expect(set.size()).toBe(3);
+    expect(set.toArray()).toEqual([1, 2, 3]);
   });
 
-  test("add inserts new values and throws for duplicates", () => {
+  test("add inserts new values and ignores duplicates", () => {
     const set = new ArraySet<number>();
 
     set.add(2);
     set.add(1);
-    expect(() => set.add(2)).toThrow(DuplicateElementError);
+    set.add(2);
 
     expect(set.size()).toBe(2);
     expect(set.toArray()).toEqual([1, 2]);

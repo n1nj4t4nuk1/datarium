@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { StrategyBoundedSortedLinkedSet } from "../../../../../src/strategy/collections/sets/strategy-bounded-sorted-linked-set/strategy-bounded-sorted-linked-set";
-import { DuplicateElementError } from "../../../../../src/core/errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 import { InvalidCapacityError } from "../../../../../src/core/errors/invalid-capacity-error";
 import { ListCapacityExceededError } from "../../../../../src/core/errors/list-capacity-exceeded-error";
@@ -29,19 +28,22 @@ describe("StrategyBoundedSortedLinkedSet with basic types", () => {
     );
   });
 
-  test("throws DuplicateElementError when adding duplicate values", () => {
+  test("ignores duplicate values when adding", () => {
     const set = new StrategyBoundedSortedLinkedSet<number>(4, (left, right) => left - right);
 
     set.add(3);
     set.add(1);
+    set.add(1);
 
-    expect(() => set.add(1)).toThrow(DuplicateElementError);
+    expect(set.size()).toBe(2);
+    expect(set.toArray()).toEqual([1, 3]);
   });
 
-  test("rejects duplicate values during initialization", () => {
-    expect(() => {
-      new StrategyBoundedSortedLinkedSet<number>(4, undefined, [3, 1, 2, 1]);
-    }).toThrow(DuplicateElementError);
+  test("ignores duplicate values during initialization", () => {
+    const set = new StrategyBoundedSortedLinkedSet<number>(4, undefined, [3, 1, 2, 1]);
+
+    expect(set.size()).toBe(3);
+    expect(set.toArray()).toEqual([1, 2, 3]);
   });
 
   test("keeps numbers sorted ascending with explicit comparator", () => {
@@ -128,6 +130,9 @@ describe("StrategyBoundedSortedLinkedSet with basic types", () => {
 
     expect(set.contains({ id: 2, label: "other" })).toBe(true);
     expect(set.contains({ id: 5, label: "five" })).toBe(false);
-    expect(() => set.add({ id: 2, label: "different" })).toThrow(DuplicateElementError);
+    set.add({ id: 2, label: "different" });
+
+    expect(set.size()).toBe(3);
+    expect(set.toArray().map((item) => item.id)).toEqual([1, 2, 3]);
   });
 });

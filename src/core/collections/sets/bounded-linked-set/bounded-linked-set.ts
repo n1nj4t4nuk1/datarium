@@ -1,6 +1,5 @@
 import type { Set } from "../set";
 import { BoundedSortedLinkedList } from "../../lists/bounded-sorted-linked-list/bounded-sorted-linked-list";
-import { DuplicateElementError } from "../../../errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../errors/element-not-found-error";
 
 export class BoundedLinkedSet<T> implements Set<T> {
@@ -28,7 +27,7 @@ export class BoundedLinkedSet<T> implements Set<T> {
 
   add(value: T): void {
     if (this.contains(value)) {
-      throw new DuplicateElementError(`Element '${String(value)}' already exists in BoundedLinkedSet`);
+      return;
     }
 
     this.values.add(value);

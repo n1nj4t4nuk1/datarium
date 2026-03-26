@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { StrategySortedArraySet } from "../../../../../src/strategy/collections/sets/strategy-sorted-array-set/strategy-sorted-array-set";
-import { DuplicateElementError } from "../../../../../src/core/errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 import { ComparatorInferenceError } from "../../../../../src/strategy/errors/comparator-inference-error";
 
@@ -17,19 +16,22 @@ describe("StrategySortedArraySet with basic types", () => {
     }).toThrow(ComparatorInferenceError);
   });
 
-  test("throws DuplicateElementError when adding duplicate values", () => {
+  test("ignores duplicate values when adding", () => {
     const set = new StrategySortedArraySet<number>((left, right) => left - right);
 
     set.add(3);
     set.add(1);
+    set.add(1);
 
-    expect(() => set.add(1)).toThrow(DuplicateElementError);
+    expect(set.size()).toBe(2);
+    expect(set.toArray()).toEqual([1, 3]);
   });
 
-  test("rejects duplicate values during initialization", () => {
-    expect(() => {
-      new StrategySortedArraySet<number>(undefined, [3, 1, 2, 1]);
-    }).toThrow(DuplicateElementError);
+  test("ignores duplicate values during initialization", () => {
+    const set = new StrategySortedArraySet<number>(undefined, [3, 1, 2, 1]);
+
+    expect(set.size()).toBe(3);
+    expect(set.toArray()).toEqual([1, 2, 3]);
   });
 
   test("keeps numbers sorted ascending with explicit comparator", () => {
@@ -55,10 +57,13 @@ describe("StrategySortedArraySet with basic types", () => {
     expect(set.toArray()).toEqual(["apple", "banana", "zebra"]);
   });
 
-  test("throws DuplicateElementError when adding duplicate string", () => {
+  test("ignores duplicate string when adding", () => {
     const set = new StrategySortedArraySet<string>(undefined, ["apple", "banana"]);
 
-    expect(() => set.add("apple")).toThrow(DuplicateElementError);
+    set.add("apple");
+
+    expect(set.size()).toBe(2);
+    expect(set.toArray()).toEqual(["apple", "banana"]);
   });
 
   test("contains returns true for existing elements and false for missing", () => {
@@ -122,8 +127,10 @@ describe("StrategySortedArraySet with basic types", () => {
     expect(set.contains({ id: 2, label: "other" })).toBe(true);
     expect(set.contains({ id: 5, label: "five" })).toBe(false);
 
-    // Should detect duplicate by id, not by label
-    expect(() => set.add({ id: 2, label: "different" })).toThrow(DuplicateElementError);
+    set.add({ id: 2, label: "different" });
+
+    expect(set.size()).toBe(3);
+    expect(set.toArray().map((item) => item.id)).toEqual([1, 2, 3]);
   });
 
   test("removes element using custom equality comparator", () => {

@@ -1,6 +1,5 @@
 import type { Set } from "../set";
 import { NativeMap } from "../../maps/native-map/native-map";
-import { DuplicateElementError } from "../../../errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../errors/element-not-found-error";
 
 export class NativeMapSet<T extends PropertyKey> implements Set<T> {
@@ -28,7 +27,7 @@ export class NativeMapSet<T extends PropertyKey> implements Set<T> {
 
   add(value: T): void {
     if (this.contains(value)) {
-      throw new DuplicateElementError(`Element '${String(value)}' already exists in NativeMapSet`);
+      return;
     }
 
     this.values.put(value, true);

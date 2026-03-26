@@ -1,6 +1,5 @@
 import type { Set } from "../set";
 import { SortedArrayList } from "../../lists/sorted-array-list/sorted-array-list";
-import { DuplicateElementError } from "../../../errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../errors/element-not-found-error";
 
 export class ArraySet<T> implements Set<T> {
@@ -28,7 +27,7 @@ export class ArraySet<T> implements Set<T> {
 
   add(value: T): void {
     if (this.contains(value)) {
-      throw new DuplicateElementError(`Element '${String(value)}' already exists in ArraySet`);
+      return;
     }
 
     this.values.add(value);

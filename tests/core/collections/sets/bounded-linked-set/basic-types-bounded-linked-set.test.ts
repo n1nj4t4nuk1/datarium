@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { BoundedLinkedSet } from "../../../../../src/core/collections/sets/bounded-linked-set/bounded-linked-set";
-import { DuplicateElementError } from "../../../../../src/core/errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 import { InvalidCapacityError } from "../../../../../src/core/errors/invalid-capacity-error";
 import { ListCapacityExceededError } from "../../../../../src/core/errors/list-capacity-exceeded-error";
@@ -14,16 +13,19 @@ describe("BoundedLinkedSet", () => {
     expect(set.toArray()).toEqual([]);
   });
 
-  test("throws DuplicateElementError when initial values contain duplicates", () => {
-    expect(() => new BoundedLinkedSet<number>(3, [3, 1, 2, 2, 1])).toThrow(DuplicateElementError);
+  test("ignores duplicate initial values", () => {
+    const set = new BoundedLinkedSet<number>(3, [3, 1, 2, 2, 1]);
+
+    expect(set.size()).toBe(3);
+    expect(set.toArray()).toEqual([1, 2, 3]);
   });
 
-  test("add inserts new values and throws for duplicates", () => {
+  test("add inserts new values and ignores duplicates", () => {
     const set = new BoundedLinkedSet<number>(2);
 
     set.add(2);
     set.add(1);
-    expect(() => set.add(2)).toThrow(DuplicateElementError);
+    set.add(2);
 
     expect(set.size()).toBe(2);
     expect(set.toArray()).toEqual([1, 2]);

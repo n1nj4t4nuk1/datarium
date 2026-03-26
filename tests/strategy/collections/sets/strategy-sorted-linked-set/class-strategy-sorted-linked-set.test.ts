@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { StrategySortedLinkedSet } from "../../../../../src/strategy/collections/sets/strategy-sorted-linked-set/strategy-sorted-linked-set";
-import { DuplicateElementError } from "../../../../../src/core/errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 
 class User {
@@ -43,20 +42,21 @@ describe("StrategySortedLinkedSet with class type User", () => {
     expect(set.toArray().map((user) => user.age)).toEqual([22, 29, 35]);
   });
 
-  test("rejects duplicate user by id during initialization", () => {
-    expect(() => {
-      new StrategySortedLinkedSet<User>(
-        orderByAge,
-        [
-          new User(1, "Ana", 35),
-          new User(1, "Different Ana", 50),
-        ],
-        equalById,
-      );
-    }).toThrow(DuplicateElementError);
+  test("ignores duplicate user by id during initialization", () => {
+    const set = new StrategySortedLinkedSet<User>(
+      orderByAge,
+      [
+        new User(1, "Ana", 35),
+        new User(1, "Different Ana", 50),
+      ],
+      equalById,
+    );
+
+    expect(set.size()).toBe(1);
+    expect(set.toArray().map((user) => user.id)).toEqual([1]);
   });
 
-  test("throws DuplicateElementError when adding user with existing id", () => {
+  test("ignores user with existing id when adding", () => {
     const set = new StrategySortedLinkedSet<User>(
       orderByAge,
       [
@@ -66,7 +66,10 @@ describe("StrategySortedLinkedSet with class type User", () => {
       equalById,
     );
 
-    expect(() => set.add(new User(1, "Another Ana", 30))).toThrow(DuplicateElementError);
+    set.add(new User(1, "Another Ana", 30));
+
+    expect(set.size()).toBe(2);
+    expect(set.toArray().map((user) => user.id)).toEqual([2, 1]);
   });
 
   test("uses equality comparator by id for contains", () => {

@@ -1,6 +1,5 @@
 import type { Set } from "../set";
 import { SortedLinkedList } from "../../lists/sorted-linked-list/sorted-linked-list";
-import { DuplicateElementError } from "../../../errors/duplicate-element-error";
 import { ElementNotFoundError } from "../../../errors/element-not-found-error";
 
 export class LinkedSet<T> implements Set<T> {
@@ -28,7 +27,7 @@ export class LinkedSet<T> implements Set<T> {
 
   add(value: T): void {
     if (this.contains(value)) {
-      throw new DuplicateElementError(`Element '${String(value)}' already exists in LinkedSet`);
+      return;
     }
 
     this.values.add(value);
