@@ -1,6 +1,5 @@
 import { StrategyBoundedSortedLinkedSet } from "../../../../strategy/collections/sets/strategy-bounded-sorted-linked-set/strategy-bounded-sorted-linked-set";
-
-type LambdaComparator<T> = (left: T, right: T) => number;
+import type { LambdaComparator } from "../../../lambda-comparator.ts";
 
 export class LambdaBoundedSortedLinkedSet<T> {
   private readonly delegate: StrategyBoundedSortedLinkedSet<T>;

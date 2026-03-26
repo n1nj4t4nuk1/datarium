@@ -1,6 +1,5 @@
 import { StrategyBoundedSortedArrayList } from "../../../../strategy/collections/lists/strategy-bounded-sorted-array-list/strategy-bounded-sorted-array-list";
-
-type LambdaComparator<T> = (left: T, right: T) => number;
+import type { LambdaComparator } from "../../../lambda-comparator.ts";
 
 export class LambdaBoundedSortedArrayList<T> {
   private readonly delegate: StrategyBoundedSortedArrayList<T>;
