@@ -28,9 +28,10 @@ A TypeScript library providing common data structures that are missing from Java
   - `NativeMap<K extends PropertyKey, V>` backed by native object storage `{}`
 
 - **Strategy Variants** (`src/strategy/collections/`)
-  - `StrategyArrayList<T>`
-  - `StrategyBoundedArrayList<T>`
-  - `StrategySortedArrayList<T>` (uses strategy comparators)
+  - `StrategySortedArrayList<T>`, `StrategySortedLinkedList<T>`
+  - `StrategyBoundedSortedArrayList<T>`, `StrategyBoundedSortedLinkedList<T>`
+  - `StrategySortedArraySet<T>`, `StrategySortedLinkedSet<T>`
+  - `StrategyBoundedSortedSet<T>`, `StrategyBoundedSortedLinkedSet<T>`
 
 - **Error-first API (core)**
   - Mutations/searches that cannot be resolved throw descriptive custom errors instead of returning sentinel values (`false`, `-1`, `undefined`, `null`).
@@ -163,12 +164,8 @@ src/
 
   strategy/
     collections/
-      strategy-array-list/
-        strategy-array-list.ts
-      strategy-bounded-array-list/
-        strategy-bounded-array-list.ts
-      strategy-sorted-array-list/
-        strategy-sorted-array-list.ts
+      lists/
+      sets/
     order-comparators/
     equality-comparators/
     hash-calculators/
