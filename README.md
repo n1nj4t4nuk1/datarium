@@ -54,7 +54,7 @@ bun test
 ### ArrayList
 
 ```typescript
-import { ArrayList } from "./src/core/collections/array-list/array-list";
+import { ArrayList } from "./src/core/collections/lists/array-list/array-list";
 
 const list = new ArrayList<number>([1, 2, 3]);
 
@@ -70,7 +70,7 @@ list.toArray();
 ### NativeMap backed by {}
 
 ```typescript
-import { NativeMap } from "./src/core/collections/native-map/native-map";
+import { NativeMap } from "./src/core/collections/maps/native-map/native-map";
 
 const map = new NativeMap<number, string>();
 
@@ -87,7 +87,7 @@ map.keys();             // ["1", "2"] (numeric keys are coerced to string in obj
 ### StrategySortedArrayList
 
 ```typescript
-import { StrategySortedArrayList } from "./src/strategy/collections/strategy-sorted-array-list/strategy-sorted-array-list";
+import { StrategySortedArrayList } from "./src/strategy/collections/lists/strategy-sorted-array-list/strategy-sorted-array-list";
 
 // Numbers sorted in ascending order
 const numbers = new StrategySortedArrayList<number>((a, b) => a - b, [3, 1, 2]);
