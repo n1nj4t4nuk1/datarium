@@ -1,6 +1,5 @@
 import type { Set } from "../../../../core/collections/sets/set";
 import { StrategyBoundedSortedLinkedList } from "../../lists/strategy-bounded-sorted-linked-list/strategy-bounded-sorted-linked-list";
-import { ElementNotFoundError } from "../../../../core/errors/element-not-found-error";
 import type { OrderComparator } from "../../../order-comparators/order-comparator";
 import type { EqualityComparator } from "../../../equality-comparators/equality-comparator";
 import { ComparatorInferenceError } from "../../../errors/comparator-inference-error";
@@ -67,9 +66,7 @@ export class StrategyBoundedSortedLinkedSet<T> implements Set<T> {
 
   remove(value: T): void {
     if (!this.values.remove(value)) {
-      throw new ElementNotFoundError(
-        `Element '${String(value)}' not found in StrategyBoundedSortedLinkedSet`,
-      );
+      return;
     }
   }
 

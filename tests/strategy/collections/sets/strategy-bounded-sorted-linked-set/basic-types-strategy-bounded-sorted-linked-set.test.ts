@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { StrategyBoundedSortedLinkedSet } from "../../../../../src/strategy/collections/sets/strategy-bounded-sorted-linked-set/strategy-bounded-sorted-linked-set";
-import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 import { InvalidCapacityError } from "../../../../../src/core/errors/invalid-capacity-error";
 import { ListCapacityExceededError } from "../../../../../src/core/errors/list-capacity-exceeded-error";
 import { ComparatorInferenceError } from "../../../../../src/strategy/errors/comparator-inference-error";
@@ -79,15 +78,14 @@ describe("StrategyBoundedSortedLinkedSet with basic types", () => {
     expect(set.contains(10)).toBe(false);
   });
 
-  test("removes existing element and throws for missing", () => {
+  test("removes existing element and ignores missing", () => {
     const set = new StrategyBoundedSortedLinkedSet<number>(5, (left, right) => left - right, [1, 3, 5]);
 
+    set.remove(3);
     set.remove(3);
 
     expect(set.toArray()).toEqual([1, 5]);
     expect(set.size()).toBe(2);
-
-    expect(() => set.remove(3)).toThrow(ElementNotFoundError);
   });
 
   test("isEmpty returns correct value", () => {

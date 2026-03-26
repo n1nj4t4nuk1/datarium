@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { NativeMapSet } from "../../../../../src/core/collections/sets/native-map-set/native-map-set";
-import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 
 describe("NativeMapSet", () => {
   test("creates an empty set by default", () => {
@@ -36,11 +35,11 @@ describe("NativeMapSet", () => {
     expect(set.contains("z")).toBe(false);
   });
 
-  test("remove deletes existing value and throws when absent", () => {
+  test("remove deletes existing value and ignores missing values", () => {
     const set = new NativeMapSet<string>(["a", "b", "c"]);
 
     set.remove("b");
-    expect(() => set.remove("b")).toThrow(ElementNotFoundError);
+    set.remove("b");
     expect(set.toArray()).toEqual(["a", "c"]);
   });
 

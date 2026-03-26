@@ -1,6 +1,5 @@
 import type { Set } from "../set";
 import { BoundedSortedArrayList } from "../../lists/bounded-sorted-array-list/bounded-sorted-array-list";
-import { ElementNotFoundError } from "../../../errors/element-not-found-error";
 
 export class BoundedArraySet<T> implements Set<T> {
   private readonly values: BoundedSortedArrayList<T>;
@@ -35,7 +34,7 @@ export class BoundedArraySet<T> implements Set<T> {
 
   remove(value: T): void {
     if (!this.contains(value)) {
-      throw new ElementNotFoundError(`Element '${String(value)}' not found in BoundedArraySet`);
+      return;
     }
 
     this.values.remove(value);

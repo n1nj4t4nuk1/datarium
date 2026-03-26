@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { ArraySet } from "../../../../../src/core/collections/sets/array-set/array-set";
-import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 
 describe("ArraySet", () => {
   test("creates an empty set by default", () => {
@@ -36,11 +35,11 @@ describe("ArraySet", () => {
     expect(set.contains("z")).toBe(false);
   });
 
-  test("remove deletes existing value and throws when absent", () => {
+  test("remove deletes existing value and ignores missing values", () => {
     const set = new ArraySet<number>([1, 2, 3]);
 
     set.remove(2);
-    expect(() => set.remove(2)).toThrow(ElementNotFoundError);
+    set.remove(2);
     expect(set.toArray()).toEqual([1, 3]);
   });
 

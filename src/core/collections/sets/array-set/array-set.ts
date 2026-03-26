@@ -1,6 +1,5 @@
 import type { Set } from "../set";
 import { SortedArrayList } from "../../lists/sorted-array-list/sorted-array-list";
-import { ElementNotFoundError } from "../../../errors/element-not-found-error";
 
 export class ArraySet<T> implements Set<T> {
   private readonly values: SortedArrayList<T>;
@@ -35,7 +34,7 @@ export class ArraySet<T> implements Set<T> {
 
   remove(value: T): void {
     if (!this.contains(value)) {
-      throw new ElementNotFoundError(`Element '${String(value)}' not found in ArraySet`);
+      return;
     }
 
     this.values.remove(value);

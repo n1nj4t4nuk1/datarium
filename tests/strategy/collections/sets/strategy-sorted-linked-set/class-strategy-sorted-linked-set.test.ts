@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { StrategySortedLinkedSet } from "../../../../../src/strategy/collections/sets/strategy-sorted-linked-set/strategy-sorted-linked-set";
-import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 
 class User {
   constructor(
@@ -104,14 +103,17 @@ describe("StrategySortedLinkedSet with class type User", () => {
     expect(set.toArray().map((user) => user.age)).toEqual([29, 35]);
   });
 
-  test("throws ElementNotFoundError when removing non-existent user", () => {
+  test("ignores removing non-existent user", () => {
     const set = new StrategySortedLinkedSet<User>(
       orderByAge,
       [new User(1, "Ana", 35)],
       equalById,
     );
 
-    expect(() => set.remove(new User(999, "Unknown", 100))).toThrow(ElementNotFoundError);
+    set.remove(new User(999, "Unknown", 100));
+
+    expect(set.size()).toBe(1);
+    expect(set.toArray().map((user) => user.id)).toEqual([1]);
   });
 
   test("isEmpty and clear work correctly", () => {

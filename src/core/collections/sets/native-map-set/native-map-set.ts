@@ -1,6 +1,5 @@
 import type { Set } from "../set";
 import { NativeMap } from "../../maps/native-map/native-map";
-import { ElementNotFoundError } from "../../../errors/element-not-found-error";
 
 export class NativeMapSet<T extends PropertyKey> implements Set<T> {
   private readonly values: NativeMap<T, true>;
@@ -35,7 +34,7 @@ export class NativeMapSet<T extends PropertyKey> implements Set<T> {
 
   remove(value: T): void {
     if (!this.contains(value)) {
-      throw new ElementNotFoundError(`Element '${String(value)}' not found in NativeMapSet`);
+      return;
     }
 
     this.values.remove(value);

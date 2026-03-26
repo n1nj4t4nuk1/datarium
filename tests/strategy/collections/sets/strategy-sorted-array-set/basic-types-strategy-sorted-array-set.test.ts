@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { StrategySortedArraySet } from "../../../../../src/strategy/collections/sets/strategy-sorted-array-set/strategy-sorted-array-set";
-import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 import { ComparatorInferenceError } from "../../../../../src/strategy/errors/comparator-inference-error";
 
 describe("StrategySortedArraySet with basic types", () => {
@@ -76,15 +75,14 @@ describe("StrategySortedArraySet with basic types", () => {
     expect(set.contains(10)).toBe(false);
   });
 
-  test("removes existing element and throws for missing", () => {
+  test("removes existing element and ignores missing", () => {
     const set = new StrategySortedArraySet<number>((left, right) => left - right, [1, 3, 5]);
 
+    set.remove(3);
     set.remove(3);
 
     expect(set.toArray()).toEqual([1, 5]);
     expect(set.size()).toBe(2);
-
-    expect(() => set.remove(3)).toThrow(ElementNotFoundError);
   });
 
   test("isEmpty returns correct value", () => {

@@ -1,6 +1,5 @@
 import type { Set } from "../set";
 import { SortedLinkedList } from "../../lists/sorted-linked-list/sorted-linked-list";
-import { ElementNotFoundError } from "../../../errors/element-not-found-error";
 
 export class LinkedSet<T> implements Set<T> {
   private readonly values: SortedLinkedList<T>;
@@ -35,7 +34,7 @@ export class LinkedSet<T> implements Set<T> {
 
   remove(value: T): void {
     if (!this.contains(value)) {
-      throw new ElementNotFoundError(`Element '${String(value)}' not found in LinkedSet`);
+      return;
     }
 
     this.values.remove(value);

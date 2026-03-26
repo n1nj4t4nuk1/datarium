@@ -1,6 +1,5 @@
 import { describe, expect, test } from "bun:test";
 import { BoundedArraySet } from "../../../../../src/core/collections/sets/bounded-array-set/bounded-array-set";
-import { ElementNotFoundError } from "../../../../../src/core/errors/element-not-found-error";
 import { InvalidCapacityError } from "../../../../../src/core/errors/invalid-capacity-error";
 import { ListCapacityExceededError } from "../../../../../src/core/errors/list-capacity-exceeded-error";
 
@@ -38,11 +37,11 @@ describe("BoundedArraySet", () => {
     expect(set.contains("z")).toBe(false);
   });
 
-  test("remove deletes existing value and throws when absent", () => {
+  test("remove deletes existing value and ignores missing values", () => {
     const set = new BoundedArraySet<number>(3, [1, 2, 3]);
 
     set.remove(2);
-    expect(() => set.remove(2)).toThrow(ElementNotFoundError);
+    set.remove(2);
     expect(set.toArray()).toEqual([1, 3]);
   });
 
