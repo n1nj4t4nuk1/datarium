@@ -10,7 +10,7 @@ await runSuite("Maps: NativeMap put x20k", (bench) => {
   bench.add("NativeMap", () => {
     const map = new NativeMap<string, number>();
     for (let index = 0; index < SIZE; index += 1) {
-      map.put(keys[index], index);
+      map.put(keys[index]!, index);
     }
   });
 });
@@ -19,11 +19,11 @@ await runSuite("Maps: NativeMap get x5k", (bench) => {
   bench.add("NativeMap", () => {
     const map = new NativeMap<string, number>();
     for (let index = 0; index < SIZE; index += 1) {
-      map.put(keys[index], index);
+      map.put(keys[index]!, index);
     }
 
     for (let probe = 0; probe < PROBES; probe += 1) {
-      map.get(keys[(probe * 41) % SIZE]);
+      map.get(keys[(probe * 41) % SIZE]!);
     }
   });
 });
@@ -32,11 +32,11 @@ await runSuite("Maps: NativeMap remove x5k", (bench) => {
   bench.add("NativeMap", () => {
     const map = new NativeMap<string, number>();
     for (let index = 0; index < SIZE; index += 1) {
-      map.put(keys[index], index);
+      map.put(keys[index]!, index);
     }
 
     for (let probe = 0; probe < PROBES; probe += 1) {
-      map.remove(keys[probe]);
+      map.remove(keys[probe]!);
     }
   });
 });
